@@ -6,7 +6,7 @@ permalink: /categories/
 
 # Kategórie blogov
 
-## Papaya kategórie
+## Oficiálne kategórie
 
 - [Top destinácie](/categories/top-destinacie/)
 - [Tipy a triky](/categories/tipy-a-triky/)
