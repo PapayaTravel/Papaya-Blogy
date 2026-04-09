@@ -11,9 +11,7 @@ plugins:
 
 # Základné nastavenia
 show_excerpts: true
-header_pages:
-  - index.md
-  - categories.md
+search: true
 
 # Vzhľad
 minimal_mistakes_skin: "default"   # neskôr zmeníme na peknú (napr. "contrast", "dirt", "neon" alebo vlastnú)
