@@ -1,6 +1,7 @@
 main:
-  - title: "Papaya Blogy"
+  - title: "Papaya"
     url: "/"
+    excerpt: "Blogy"
 
   - title: "Kategórie"
     url: "/categories/"
