@@ -11,17 +11,34 @@
 
 <body>
 
-<header>Papaya</header>
+<header>
+  <a href="index.html" class="logo-link">
+    <img src="image.png" class="logo">
+    Papaya
+  </a>
+</header>
 
 <div class="top-bar">
-  <button onclick="toggleFilter()" class="filter-btn">Filter</button>
+
+  <div>
+    <button onclick="toggleSort()" class="filter-btn">Zoradiť podľa</button>
+
+    <div id="sortMenu" class="dropdown">
+      <div onclick="sortArticles('new')">Najnovšie</div>
+      <div onclick="sortArticles('old')">Najstaršie</div>
+      <div onclick="sortArticles('top')">Top články</div>
+    </div>
+  </div>
+
   <input type="text" id="search" placeholder="Hľadať článok...">
+
 </div>
 
-<div id="filters" class="filters">
-  <button>Najnovšie</button>
-  <button>Najstaršie</button>
-  <button>Top</button>
+<div class="tags">
+  Tagy:
+  <span class="tag">Tag 1</span>
+  <span class="tag">Tag 2</span>
+  <span class="tag">Tag 3</span>
 </div>
 
 <section class="gallery" id="gallery">
@@ -39,29 +56,23 @@
 </section>
 
 <script>
-function toggleFilter() {
-  document.getElementById("filters").classList.toggle("show");
+function toggleSort() {
+  document.getElementById("sortMenu").classList.toggle("show");
 }
 
-// 🔍 FUNKČNÉ VYHĽADÁVANIE
+// SEARCH
 document.getElementById("search").addEventListener("keyup", function() {
   let value = this.value.toLowerCase();
   let cards = document.querySelectorAll(".card");
 
   cards.forEach(card => {
     let title = card.getAttribute("data-title").toLowerCase();
-
-    if (title.includes(value)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
+    card.style.display = title.includes(value) ? "block" : "none";
   });
 });
 
 function openArticle(card) {
-  let title = card.getAttribute("data-title");
-  localStorage.setItem("articleTitle", title);
+  localStorage.setItem("articleTitle", card.getAttribute("data-title"));
   window.location.href = "article.html";
 }
 </script>
