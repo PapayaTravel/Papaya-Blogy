@@ -1,13 +1,19 @@
 title: Papaya Blogy
-description: Tu nájdete všetky blogy Česko-Slovenského Discord serveru Papaya.
+description: Tu nájdete všetky blogy, články a aktuality z Česko-Slovenského Discord serveru Papaya.
 
-url: "https://PapayaTravel.github.io"          
-baseurl: "/Papaya-Blogy"                     
+url: "https://PapayaTravel.github.io"
+baseurl: "/Papaya-Blogy"
 
-theme: minima
+remote_theme: mmistakes/minimal-mistakes
 
+plugins:
+  - jekyll-include-cache
+
+# Základné nastavenia
 show_excerpts: true
-
 header_pages:
   - index.md
   - categories.md
+
+# Vzhľad
+minimal_mistakes_skin: "default"   # neskôr zmeníme na peknú (napr. "contrast", "dirt", "neon" alebo vlastnú)
