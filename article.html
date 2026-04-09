@@ -3,17 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>Článok</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<header>🍍 Papaya</header>
+<header>Papaya</header>
 
 <div class="article-wrapper">
   <div class="article">
 
-    <h1>Názov článku</h1>
+    <h1 id="title"></h1>
+
     <p>
       Toto je obsah článku. Tu bude text ako vo Worde.
     </p>
@@ -24,6 +28,10 @@
 
   </div>
 </div>
+
+<script>
+document.getElementById("title").innerText = localStorage.getItem("articleTitle");
+</script>
 
 </body>
 </html>
