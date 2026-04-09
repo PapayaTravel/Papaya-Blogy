@@ -1,0 +1,9 @@
+main:
+  - title: "Papaya Blogy"
+    url: "/"
+
+  - title: "Kategórie"
+    url: "/categories/"
+
+  - title: "Discord"
+    url: "https://discord.gg/pJyMf2Jxba"   # ← sem neskôr vložíš svoj trvalý link
