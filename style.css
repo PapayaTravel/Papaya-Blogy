@@ -7,18 +7,19 @@ body {
 /* HEADER */
 header {
   background: white;
+  padding: 10px;
   text-align: center;
-  padding: 20px;
-  font-size: 26px;
-  font-weight: 800;
 }
 
-/* LOGO */
+.logo-link {
+  text-decoration: none;
+  color: black;
+  font-weight: 800;
+  font-size: 26px;
+}
+
 .logo {
-  width: 45px;
-  height: 45px;
-  object-fit: cover;
-  border-radius: 50%;
+  width: 60px;
   vertical-align: middle;
   margin-right: 10px;
 }
@@ -26,33 +27,54 @@ header {
 /* INTRO */
 .intro {
   text-align: center;
-  padding: 50px 20px;
+  padding: 40px;
 }
 
-/* DISCORD BUTTON */
+/* DISCORD */
 .discord-btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-
   padding: 15px 30px;
   background: black;
   color: white;
-  text-decoration: none;
-
   border-radius: 999px;
-  font-weight: 700;
+  text-decoration: none;
 }
 
-.discord-btn img {
-  width: 22px;
+/* SLIDER */
+.slider {
+  overflow: hidden;
+  margin-top: 40px;
+}
+
+.slide-track {
+  display: flex;
+  gap: 20px;
+  animation: scroll 20s linear infinite;
+}
+
+.slide {
+  min-width: 200px;
+  background: white;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.slide img {
+  width: 100%;
+}
+
+@keyframes scroll {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
 }
 
 /* NADPISY */
-h2 {
+.fancy {
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
 }
 
 /* KATEGÓRIE */
@@ -67,28 +89,18 @@ h2 {
 .cat-btn {
   width: 80%;
   padding: 16px;
-
   background: white;
+  border-radius: 999px;
   text-align: center;
+  font-family: 'Montserrat';
+  font-weight: 800;
   text-decoration: none;
   color: black;
-
-  border-radius: 999px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 800;
-
   transition: 0.3s;
 }
 
 .cat-btn:hover {
   transform: scale(1.05);
-}
-
-/* TEXT POD */
-.under-text {
-  text-align: center;
-  margin-top: 15px;
-  margin-bottom: 40px;
 }
 
 /* FILTER */
@@ -99,18 +111,31 @@ h2 {
 }
 
 .filter-btn {
-  border-radius: 999px;
-  padding: 10px 20px;
-}
-
-.filters {
-  display: none;
-  background: #f5e6d3;
   padding: 10px;
 }
 
-.filters.show {
+.dropdown {
+  display: none;
+  background: #f5e6d3;
+  position: absolute;
+}
+
+.dropdown.show {
   display: block;
+}
+
+/* TAGY */
+.tags {
+  padding: 10px;
+}
+
+.tag {
+  background: black;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px;
+  margin-right: 5px;
+  font-size: 12px;
 }
 
 /* GALÉRIA */
@@ -124,7 +149,6 @@ h2 {
 .card {
   background: white;
   border-radius: 15px;
-  overflow: hidden;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -135,11 +159,6 @@ h2 {
 
 .card img {
   width: 100%;
-}
-
-.title {
-  padding: 10px;
-  border-top: 1px solid #ddd;
 }
 
 /* ČLÁNOK */
@@ -153,14 +172,4 @@ h2 {
   background: white;
   width: 800px;
   padding: 40px;
-}
-
-.discord-link {
-  display: block;
-  margin-top: 30px;
-  padding: 15px;
-  background: black;
-  color: white;
-  text-align: center;
-  text-decoration: none;
 }
