@@ -15,10 +15,12 @@ header {
 
 /* LOGO */
 .logo {
-  width: 40px;
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
   vertical-align: middle;
   margin-right: 10px;
-  border-radius: 50%;
 }
 
 /* INTRO */
