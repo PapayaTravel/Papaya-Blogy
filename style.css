@@ -1,34 +1,59 @@
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: 'Poppins', sans-serif;
   background: #f5e6d3;
 }
 
-/* horná lišta */
+/* HEADER */
 header {
   background: white;
   text-align: center;
-  padding: 15px;
-  font-size: 24px;
-  font-weight: bold;
+  padding: 20px;
+  font-size: 26px;
+  font-weight: 800;
 }
 
-/* intro */
+/* LOGO */
+.logo {
+  width: 40px;
+  vertical-align: middle;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+/* INTRO */
 .intro {
   text-align: center;
   padding: 50px 20px;
 }
 
+/* DISCORD BUTTON */
 .discord-btn {
-  display: inline-block;
-  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
   padding: 15px 30px;
   background: black;
   color: white;
   text-decoration: none;
+
+  border-radius: 999px;
+  font-weight: 700;
 }
 
-/* kategórie */
+.discord-btn img {
+  width: 22px;
+}
+
+/* NADPISY */
+h2 {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+}
+
+/* KATEGÓRIE */
 .categories {
   display: flex;
   flex-direction: column;
@@ -39,11 +64,17 @@ header {
 
 .cat-btn {
   width: 80%;
-  padding: 15px;
+  padding: 16px;
+
   background: white;
   text-align: center;
   text-decoration: none;
   color: black;
+
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+
   transition: 0.3s;
 }
 
@@ -51,9 +82,33 @@ header {
   transform: scale(1.05);
 }
 
-/* text */
-.center-text {
+/* TEXT POD */
+.under-text {
   text-align: center;
+  margin-top: 15px;
+  margin-bottom: 40px;
+}
+
+/* FILTER */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.filter-btn {
+  border-radius: 999px;
+  padding: 10px 20px;
+}
+
+.filters {
+  display: none;
+  background: #f5e6d3;
+  padding: 10px;
+}
+
+.filters.show {
+  display: block;
 }
 
 /* GALÉRIA */
@@ -72,6 +127,10 @@ header {
   transition: 0.3s;
 }
 
+.card:hover {
+  transform: scale(1.05);
+}
+
 .card img {
   width: 100%;
 }
@@ -81,33 +140,11 @@ header {
   border-top: 1px solid #ddd;
 }
 
-.card:hover {
-  transform: scale(1.05);
-}
-
-/* FILTER */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.filters {
-  display: none;
-  background: white;
-  padding: 10px;
-}
-
-.filters.show {
-  display: block;
-}
-
 /* ČLÁNOK */
 .article-wrapper {
-  background: #f5e6d3;
-  padding: 40px;
   display: flex;
   justify-content: center;
+  padding: 40px;
 }
 
 .article {
@@ -117,12 +154,11 @@ header {
 }
 
 .discord-link {
+  display: block;
   margin-top: 30px;
   padding: 15px;
-  width: 100%;
   background: black;
   color: white;
   text-align: center;
   text-decoration: none;
-  display: block;
 }
