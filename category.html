@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<title>Kategória</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>🍍 Papaya</header>
+
+<div class="top-bar">
+  <button onclick="toggleFilter()">Filter</button>
+  <input type="text" placeholder="Hľadať...">
+</div>
+
+<div id="filters" class="filters">
+  <button>Najnovšie</button>
+  <button>Najstaršie</button>
+  <button>Top</button>
+</div>
+
+<section class="gallery">
+
+  <div class="card" onclick="location.href='article.html'">
+    <img src="https://via.placeholder.com/300">
+    <div class="title">Prvý článok</div>
+  </div>
+
+  <div class="card" onclick="location.href='article.html'">
+    <img src="https://via.placeholder.com/300">
+    <div class="title">Druhý článok</div>
+  </div>
+
+</section>
+
+<script>
+function toggleFilter() {
+  document.getElementById("filters").classList.toggle("show");
+}
+</script>
+
+</body>
+</html>
