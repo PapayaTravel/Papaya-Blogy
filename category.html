@@ -4,11 +4,9 @@
 <meta charset="UTF-8">
 <title>Kategória</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Montserrat:wght@600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
 <header>
@@ -20,44 +18,73 @@
 
 <div class="top-bar">
 
-  <div>
-    <button onclick="toggleSort()" class="filter-btn">Zoradiť podľa</button>
+  <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▼</button>
 
-    <div id="sortMenu" class="dropdown">
-      <div onclick="sortArticles('new')">Najnovšie</div>
-      <div onclick="sortArticles('old')">Najstaršie</div>
-      <div onclick="sortArticles('top')">Top články</div>
+  <div id="filterContent" class="filter-content">
+    <button id="sortBtn" class="sort-btn" onclick="toggleSort()">Zoradiť podľa ▼</button>
+    <div id="sortOptions" class="sort-options">
+      <div onclick="applySort('new')">Najnovšie</div>
+      <div onclick="applySort('old')">Najstaršie</div>
+      <div onclick="applySort('top')">Top články</div>
     </div>
+
+    <span>Tagy:</span>
+    <span class="tag" data-tag="Tag1" onclick="toggleTag(this)">Tag 1</span>
+    <span class="tag" data-tag="Tag2" onclick="toggleTag(this)">Tag 2</span>
+    <span class="tag" data-tag="Tag3" onclick="toggleTag(this)">Tag 3</span>
   </div>
 
   <input type="text" id="search" placeholder="Hľadať článok...">
 
 </div>
 
-<div class="tags">
-  Tagy:
-  <span class="tag">Tag 1</span>
-  <span class="tag">Tag 2</span>
-  <span class="tag">Tag 3</span>
-</div>
-
 <section class="gallery" id="gallery">
 
-  <div class="card" data-title="Prvý článok" onclick="openArticle(this)">
+  <!-- Každý článok má data-title a data-tags (viac tagov oddelených čiarkou) -->
+  <div class="card" data-title="Prvý článok" data-tags="Tag1,Tag2" onclick="openArticle(this)">
     <img src="https://via.placeholder.com/300">
     <div class="title">Prvý článok</div>
   </div>
 
-  <div class="card" data-title="Druhý článok" onclick="openArticle(this)">
+  <div class="card" data-title="Druhý článok" data-tags="Tag2,Tag3" onclick="openArticle(this)">
     <img src="https://via.placeholder.com/300">
     <div class="title">Druhý článok</div>
+  </div>
+
+  <div class="card" data-title="Tretí článok" data-tags="Tag1" onclick="openArticle(this)">
+    <img src="https://via.placeholder.com/300">
+    <div class="title">Tretí článok</div>
   </div>
 
 </section>
 
 <script>
+let activeTags = [];
+
+function toggleFilter() {
+  const fc = document.getElementById("filterContent");
+  fc.style.display = fc.style.display === "flex" ? "none" : "flex";
+}
+
 function toggleSort() {
-  document.getElementById("sortMenu").classList.toggle("show");
+  const so = document.getElementById("sortOptions");
+  so.style.display = so.style.display === "block" ? "none" : "block";
+}
+
+function applySort(type) {
+  const gallery = document.getElementById("gallery");
+  const cards = Array.from(gallery.children);
+  
+  if(type === "new") {
+    cards.sort((a,b) => b.dataset.title.localeCompare(a.dataset.title)); // nahradíš timestamp
+  } else if(type === "old") {
+    cards.sort((a,b) => a.dataset.title.localeCompare(b.dataset.title));
+  } else if(type === "top") {
+    cards.sort((a,b) => b.dataset.title.length - a.dataset.title.length); // ukážka podľa počtu znakov, môžeš nahradiť view count
+  }
+  cards.forEach(c => gallery.appendChild(c));
+  document.getElementById("sortBtn").innerText = `Zoradiť podľa: ${type} ▼`;
+  toggleSort();
 }
 
 // SEARCH
@@ -70,6 +97,30 @@ document.getElementById("search").addEventListener("keyup", function() {
     card.style.display = title.includes(value) ? "block" : "none";
   });
 });
+
+function toggleTag(el) {
+  const tag = el.dataset.tag;
+  if(activeTags.includes(tag)) {
+    activeTags = activeTags.filter(t => t !== tag);
+    el.classList.remove("active-tag");
+  } else {
+    activeTags.push(tag);
+    el.classList.add("active-tag");
+  }
+  filterByTag();
+}
+
+function filterByTag() {
+  const cards = document.querySelectorAll(".card");
+  cards.forEach(card => {
+    const tags = card.dataset.tags.split(",");
+    if(activeTags.length === 0 || activeTags.some(t => tags.includes(t))) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
 
 function openArticle(card) {
   localStorage.setItem("articleTitle", card.getAttribute("data-title"));
