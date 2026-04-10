@@ -166,7 +166,7 @@ header {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  height: 300px; /* menej vysoké */
+  height: 500px; /* menej vysoké */
   display: flex;
   flex-direction: column;
   cursor: pointer;
