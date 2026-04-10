@@ -221,6 +221,7 @@ header {
 .slider-track {
   display: flex;
   gap: 20px;
+  width: max-content;
   animation: scrollSlider 25s linear infinite;
 }
 
@@ -231,9 +232,9 @@ header {
 
 @keyframes scrollSlider {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
