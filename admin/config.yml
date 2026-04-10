@@ -1,0 +1,21 @@
+backend:
+  name: github
+  repo: PapayaTravel/Papaya-Blogy   # ← SEM DAJ SVOJ REPO
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "blog"
+    label: "Články"
+    folder: "articles"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Názov", name: "title", widget: "string" }
+      - { label: "Kategória", name: "category", widget: "select", options: ["top", "tipy", "problemy", "zaujimavosti", "info", "dennik"] }
+      - { label: "Obrázok", name: "image", widget: "image" }
+      - { label: "Tagy", name: "tags", widget: "list" }
+      - { label: "Discord link", name: "discord", widget: "string" }
+      - { label: "Obsah", name: "body", widget: "markdown" }
