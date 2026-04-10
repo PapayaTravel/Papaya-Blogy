@@ -75,9 +75,10 @@ articles = articles.map(a => {
 let top = articles.sort((a,b) => b.views - a.views).slice(0,10);
 
 let track = document.getElementById("sliderTrack");
-
+// duplikácia aby bol slider plynulý
+let fullList = [...top, ...top];
 // render
-top.forEach(a => {
+fullList.forEach(a => {
   let div = document.createElement("div");
   div.className = "card";
 
