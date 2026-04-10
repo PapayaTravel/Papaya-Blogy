@@ -166,7 +166,7 @@ header {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  height: 300px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -179,7 +179,7 @@ header {
 
 /* obrázok - zväčšený, aby kompenzoval zmenšenie textu */
 .img-wrap {
-  height: 92.5%;
+  height: 90%;
   overflow: hidden;
 }
 
@@ -194,7 +194,7 @@ header {
   border-top: 1px solid #ccc;
   padding: 8px 14px;
   font-weight: 600;
-  height: 7.5%;
+  height: 10%;
   display: flex;
   align-items: center;
 }
