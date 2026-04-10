@@ -17,6 +17,11 @@
   </a>
 </header>
 
+<!-- SLIDER -->
+<div class="slider">
+  <div class="slider-track" id="sliderTrack"></div>
+</div>
+
 <section class="intro">
 
   <h1>Papaya Blogy</h1>
@@ -25,7 +30,6 @@
     Blogy a príspevky z nášho Discord servera.
   </p>
 
-  <!-- DISCORD tlačidlo FIX -->
   <a href="https://discord.gg/pJyMf2Jxba" class="discord-btn">
     <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png">
     Discord Papaya
@@ -48,11 +52,50 @@
 <div class="categories">
   <a href="category.html" class="cat-btn">Denníky</a>
 
-  <!-- TEXT POD DENNÍKY FIX -->
   <p class="under-text">
     Denníky sú osobné skúsenosti členov komunity.
   </p>
 </div>
+
+<script>
+// články (musia byť rovnaké ako v category!)
+let articles = [
+  {title: "Prvý článok", img: "https://via.placeholder.com/600x400"},
+  {title: "Druhý článok", img: "https://via.placeholder.com/600x400"},
+  {title: "Tretí článok", img: "https://via.placeholder.com/600x400"}
+];
+
+// načítanie views
+articles = articles.map(a => {
+  let v = localStorage.getItem("views_" + a.title);
+  return {...a, views: v ? parseInt(v) : 0};
+});
+
+// TOP 10
+let top = articles.sort((a,b) => b.views - a.views).slice(0,10);
+
+let track = document.getElementById("sliderTrack");
+
+// render
+top.forEach(a => {
+  let div = document.createElement("div");
+  div.className = "card";
+
+  div.innerHTML = `
+    <div class="img-wrap">
+      <img src="${a.img}">
+    </div>
+    <div class="card-title">${a.title}</div>
+  `;
+
+  div.onclick = () => {
+    localStorage.setItem("articleTitle", a.title);
+    window.location.href = "article.html";
+  };
+
+  track.appendChild(div);
+});
+</script>
 
 </body>
 </html>
