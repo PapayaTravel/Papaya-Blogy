@@ -238,3 +238,7 @@ header {
     transform: translateX(-50%);
   }
 }
+.slider {
+  height: 260px;
+  border: 2px solid red;
+}
