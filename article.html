@@ -24,7 +24,26 @@
 </div>
 
 <script>
-document.getElementById("title").innerText = localStorage.getItem("articleTitle");
+let title = localStorage.getItem("articleTitle");
+document.getElementById("title").innerText = title;
+
+// VIEW SYSTEM
+let key = "viewed_" + title;
+
+if(!localStorage.getItem(key)) {
+
+  let viewsKey = "views_" + title;
+
+  let current = localStorage.getItem(viewsKey);
+  current = current ? parseInt(current) : 0;
+
+  current++;
+
+  localStorage.setItem(viewsKey, current);
+
+  // označí že zariadenie už videlo tento článok
+  localStorage.setItem(key, true);
+}
 </script>
 
 </body>
