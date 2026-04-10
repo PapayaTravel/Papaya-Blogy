@@ -177,9 +177,8 @@ header {
   transform: scale(1.03);
 }
 
-/* obrázok */
 .img-wrap {
-  height: 70%; /* menej */
+  height: 70%; /* nechávame rovnaké */
   overflow: hidden;
 }
 
@@ -189,12 +188,12 @@ header {
   object-fit: cover;
 }
 
-/* názov */
+/* názov - menší */
 .card-title {
   border-top: 1px solid #ccc;
-  padding: 8px 14px;
+  padding: 5px 12px;
   font-weight: 600;
-  height: 30%;
+  height: 15%; /* o polovicu menšie */
   display: flex;
   align-items: center;
 }
