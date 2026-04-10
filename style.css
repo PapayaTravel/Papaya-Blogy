@@ -166,7 +166,7 @@ header {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  height: 250px; /* menej vysoké */
+  height: 300px; /* menej vysoké */
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -177,8 +177,9 @@ header {
   transform: scale(1.03);
 }
 
+/* obrázok */
 .img-wrap {
-  height: 70%; /* nechávame rovnaké */
+  height: 70%; /* menej */
   overflow: hidden;
 }
 
@@ -188,12 +189,12 @@ header {
   object-fit: cover;
 }
 
-/* názov - menší */
+/* názov */
 .card-title {
   border-top: 1px solid #ccc;
-  padding: 5px 12px;
+  padding: 8px 14px;
   font-weight: 600;
-  height: 15%; /* o polovicu menšie */
+  height: 30%;
   display: flex;
   align-items: center;
 }
