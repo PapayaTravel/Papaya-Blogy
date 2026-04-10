@@ -58,9 +58,8 @@
 </div>
 
 <script>
-// články (musia byť rovnaké ako v category!)
-<script>
-// články (musia byť rovnaké ako v category!)
+
+// články (zatiaľ fake – CMS pridáme neskôr)
 let articles = [
   {title: "Prvý článok", img: "https://via.placeholder.com/600x400"},
   {title: "Druhý článok", img: "https://via.placeholder.com/600x400"},
@@ -77,8 +76,10 @@ articles = articles.map(a => {
 let top = articles.sort((a,b) => b.views - a.views).slice(0,10);
 
 let track = document.getElementById("sliderTrack");
-// duplikácia aby bol slider plynulý
+
+// duplikácia pre plynulý loop
 let fullList = [...top, ...top];
+
 // render
 fullList.forEach(a => {
   let div = document.createElement("div");
@@ -98,7 +99,5 @@ fullList.forEach(a => {
 
   track.appendChild(div);
 });
-</script>
 
-</body>
-</html>
+</script>
