@@ -18,10 +18,13 @@
 
 <div class="top-bar">
 
-  <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▼</button>
+  <!-- ŠÍPKA DOPRAVA -->
+  <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▶</button>
 
   <div id="filterContent" class="filter-content">
+    
     <button id="sortBtn" class="sort-btn" onclick="toggleSort()">Zoradiť podľa ▼</button>
+
     <div id="sortOptions" class="sort-options">
       <div onclick="applySort('new')">Najnovšie</div>
       <div onclick="applySort('old')">Najstaršie</div>
@@ -32,6 +35,7 @@
     <span class="tag" data-tag="Tag1" onclick="toggleTag(this)">Tag 1</span>
     <span class="tag" data-tag="Tag2" onclick="toggleTag(this)">Tag 2</span>
     <span class="tag" data-tag="Tag3" onclick="toggleTag(this)">Tag 3</span>
+
   </div>
 
   <input type="text" id="search" placeholder="Hľadať článok...">
@@ -40,49 +44,74 @@
 
 <section class="gallery" id="gallery">
 
-  <!-- Každý článok má data-title a data-tags (viac tagov oddelených čiarkou) -->
+  <!-- KARTA -->
   <div class="card" data-title="Prvý článok" data-tags="Tag1,Tag2" onclick="openArticle(this)">
-    <img src="https://via.placeholder.com/300">
-    <div class="title">Prvý článok</div>
+    
+    <div class="img-wrap">
+      <img src="https://via.placeholder.com/600x400">
+    </div>
+
+    <div class="card-title">Prvý článok</div>
+
   </div>
 
   <div class="card" data-title="Druhý článok" data-tags="Tag2,Tag3" onclick="openArticle(this)">
-    <img src="https://via.placeholder.com/300">
-    <div class="title">Druhý článok</div>
+    
+    <div class="img-wrap">
+      <img src="https://via.placeholder.com/600x400">
+    </div>
+
+    <div class="card-title">Druhý článok</div>
+
   </div>
 
   <div class="card" data-title="Tretí článok" data-tags="Tag1" onclick="openArticle(this)">
-    <img src="https://via.placeholder.com/300">
-    <div class="title">Tretí článok</div>
+    
+    <div class="img-wrap">
+      <img src="https://via.placeholder.com/600x400">
+    </div>
+
+    <div class="card-title">Tretí článok</div>
+
   </div>
 
 </section>
 
 <script>
+
 let activeTags = [];
 
+// FILTER
 function toggleFilter() {
   const fc = document.getElementById("filterContent");
   fc.style.display = fc.style.display === "flex" ? "none" : "flex";
 }
 
+// SORT MENU
 function toggleSort() {
   const so = document.getElementById("sortOptions");
   so.style.display = so.style.display === "block" ? "none" : "block";
 }
 
+// SORT LOGIKA
 function applySort(type) {
   const gallery = document.getElementById("gallery");
   const cards = Array.from(gallery.children);
-  
+
   if(type === "new") {
-    cards.sort((a,b) => b.dataset.title.localeCompare(a.dataset.title)); // nahradíš timestamp
-  } else if(type === "old") {
-    cards.sort((a,b) => a.dataset.title.localeCompare(b.dataset.title));
-  } else if(type === "top") {
-    cards.sort((a,b) => b.dataset.title.length - a.dataset.title.length); // ukážka podľa počtu znakov, môžeš nahradiť view count
+    cards.reverse(); // jednoduché riešenie
   }
+
+  if(type === "old") {
+    cards.reverse();
+  }
+
+  if(type === "top") {
+    cards.sort((a,b) => b.dataset.title.length - a.dataset.title.length);
+  }
+
   cards.forEach(c => gallery.appendChild(c));
+
   document.getElementById("sortBtn").innerText = `Zoradiť podľa: ${type} ▼`;
   toggleSort();
 }
@@ -94,12 +123,14 @@ document.getElementById("search").addEventListener("keyup", function() {
 
   cards.forEach(card => {
     let title = card.getAttribute("data-title").toLowerCase();
-    card.style.display = title.includes(value) ? "block" : "none";
+    card.style.display = title.includes(value) ? "flex" : "none";
   });
 });
 
+// TAGY
 function toggleTag(el) {
   const tag = el.dataset.tag;
+
   if(activeTags.includes(tag)) {
     activeTags = activeTags.filter(t => t !== tag);
     el.classList.remove("active-tag");
@@ -107,25 +138,30 @@ function toggleTag(el) {
     activeTags.push(tag);
     el.classList.add("active-tag");
   }
+
   filterByTag();
 }
 
 function filterByTag() {
   const cards = document.querySelectorAll(".card");
+
   cards.forEach(card => {
     const tags = card.dataset.tags.split(",");
+
     if(activeTags.length === 0 || activeTags.some(t => tags.includes(t))) {
-      card.style.display = "block";
+      card.style.display = "flex";
     } else {
       card.style.display = "none";
     }
   });
 }
 
+// OPEN ARTICLE
 function openArticle(card) {
   localStorage.setItem("articleTitle", card.getAttribute("data-title"));
   window.location.href = "article.html";
 }
+
 </script>
 
 </body>
