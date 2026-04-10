@@ -166,7 +166,7 @@ header {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  height: 250px; /* menej vysoké */
+  height: 150px; /* menej vysoké */
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -192,7 +192,7 @@ header {
 .card-title {
   border-top: 1px solid #ccc;
   padding: 5px 12px;
-  font-weight: 500;
+  font-weight: 600;
   height: 15%; /* o polovicu menšie */
   display: flex;
   align-items: center;
