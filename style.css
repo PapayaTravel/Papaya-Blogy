@@ -238,4 +238,13 @@ header {
     transform: translateX(-50%);
   }
 }
- 
+ /* STOP SLIDER PRI HOVER */
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+/* HOVER efekt na slider kartách */
+.slider .card:hover {
+  transform: scale(1.08);
+  z-index: 5;
+}
