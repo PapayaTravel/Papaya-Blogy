@@ -80,7 +80,10 @@
 <script>
 
 let activeTags = [];
-
+window.onload = () => {
+  activeTags = [];
+  document.querySelectorAll(".tag").forEach(t => t.classList.remove("active-tag"));
+}
 // FILTER
 function toggleFilter() {
   const fc = document.getElementById("filterContent");
