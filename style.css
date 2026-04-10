@@ -222,7 +222,7 @@ header {
   display: flex;
   gap: 20px;
   width: max-content;
-  animation: scrollSlider 25s linear infinite;
+  animation: scrollSlider 40s linear infinite;
 }
 
 .slider .card {
