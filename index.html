@@ -60,9 +60,7 @@
 <script>
 // články (musia byť rovnaké ako v category!)
 <script>
-let track = document.getElementById("sliderTrack");
-
-// TEST DATA (aby sme vylúčili problém)
+// články (musia byť rovnaké ako v category!)
 let articles = [
   {title: "Prvý článok", img: "https://via.placeholder.com/600x400"},
   {title: "Druhý článok", img: "https://via.placeholder.com/600x400"},
@@ -72,23 +70,15 @@ let articles = [
 // načítanie views
 articles = articles.map(a => {
   let v = localStorage.getItem("views_" + a.title);
-  return {...a, views: v ? parseInt(v) : 1}; // ← dôležité: default 1
+  return {...a, views: v ? parseInt(v) : 0};
 });
 
-// TOP
-let top = articles.sort((a,b) => b.views - a.views);
+// TOP 10
+let top = articles.sort((a,b) => b.views - a.views).slice(0,10);
 
-// 🔥 fallback ak je niečo zle
-if(top.length === 0){
-  top = articles;
-}
-
-// 🔥 silný loop (veľa kariet)
-let fullList = [];
-for(let i = 0; i < 10; i++){
-  fullList = fullList.concat(top);
-}
-
+let track = document.getElementById("sliderTrack");
+// duplikácia aby bol slider plynulý
+let fullList = [...top, ...top];
 // render
 fullList.forEach(a => {
   let div = document.createElement("div");
@@ -109,3 +99,6 @@ fullList.forEach(a => {
   track.appendChild(div);
 });
 </script>
+
+</body>
+</html>
