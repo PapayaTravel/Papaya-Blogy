@@ -179,7 +179,7 @@ header {
 
 /* obrázok - mierne zmenšený pre uvoľnenie miesta pre text */
 .img-wrap {
-  height: 85%;
+  height: 80%;
   overflow: hidden;
 }
 
@@ -194,7 +194,7 @@ header {
   border-top: 1px solid #ccc;
   padding: 8px 14px;
   font-weight: 600;
-  height: 15%;
+  height: 20%;
   display: flex;
   align-items: center;
 }
