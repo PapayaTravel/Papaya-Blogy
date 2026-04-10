@@ -192,8 +192,8 @@ header {
 .card-title {
   border-top: 1px solid #ccc;
   padding: 5px 12px;
-  font-weight: 600;
-  height: 10%; /* o polovicu menšie */
+  font-weight: 500;
+  height: 15%; /* o polovicu menšie */
   display: flex;
   align-items: center;
 }
