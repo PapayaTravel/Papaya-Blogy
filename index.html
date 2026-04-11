@@ -17,7 +17,6 @@
   </a>
 </header>
 
-<!-- SLIDER -->
 <div class="slider">
   <div class="slider-track" id="sliderTrack"></div>
 </div>
@@ -31,7 +30,7 @@
   </p>
 
   <a href="https://discord.gg/pJyMf2Jxba" class="discord-btn">
-    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
     Discord Papaya
   </a>
 
@@ -40,64 +39,73 @@
 <h2 class="fancy">Oficiálne blogy servera Papaya</h2>
 
 <div class="categories">
-  <a href="category.html" class="cat-btn">Top destinácie</a>
-  <a href="category.html" class="cat-btn">Tipy a triky</a>
-  <a href="category.html" class="cat-btn">Problémy a nástrahy</a>
-  <a href="category.html" class="cat-btn">Zaujímavosti</a>
-  <a href="category.html" class="cat-btn">Informácie</a>
+  <a href="category.html?cat=top" class="cat-btn">Top destinácie</a>
+  <a href="category.html?cat=tipy" class="cat-btn">Tipy a triky</a>
+  <a href="category.html?cat=problemy" class="cat-btn">Problémy a nástrahy</a>
+  <a href="category.html?cat=zaujimavosti" class="cat-btn">Zaujímavosti</a>
+  <a href="category.html?cat=info" class="cat-btn">Informácie</a>
 </div>
 
 <h2 class="fancy">Komunitné príspevky</h2>
 
 <div class="categories">
-  <a href="category.html" class="cat-btn">Denníky</a>
+  <a href="category.html?cat=dennik" class="cat-btn">Denníky</a>
 
   <p class="under-text">
     Denníky sú osobné skúsenosti členov komunity.
   </p>
 </div>
 
-<script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@sanity/client@6';
 
-// články (zatiaľ fake – CMS pridáme neskôr)
-let articles = [
-  {title: "Prvý článok", img: "https://via.placeholder.com/600x400"},
-  {title: "Druhý článok", img: "https://via.placeholder.com/600x400"},
-  {title: "Tretí článok", img: "https://via.placeholder.com/600x400"}
-];
-
-// načítanie views
-articles = articles.map(a => {
-  let v = localStorage.getItem("views_" + a.title);
-  return {...a, views: v ? parseInt(v) : 0};
+const client = createClient({
+  projectId: 'qmdaowg9',
+  dataset: 'production',
+  apiVersion: '2025-01-01',
+  useCdn: true
 });
 
-// TOP 10
-let top = articles.sort((a,b) => b.views - a.views).slice(0,10);
+const track = document.getElementById('sliderTrack');
 
-let track = document.getElementById("sliderTrack");
+const posts = await client.fetch(`
+  *[_type == "post"] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    "image": mainImage.asset->url
+  }
+`);
 
-// duplikácia pre plynulý loop
-let fullList = [...top, ...top];
+const withViews = posts.map(post => {
+  const views = parseInt(localStorage.getItem('views_' + post._id) || '0', 10);
+  return { ...post, views };
+});
 
-// render
-fullList.forEach(a => {
-  let div = document.createElement("div");
-  div.className = "card";
+const top10 = [...withViews]
+  .sort((a, b) => b.views - a.views)
+  .slice(0, 10);
 
-  div.innerHTML = `
+const looped = [...top10, ...top10];
+
+looped.forEach(post => {
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  card.innerHTML = `
     <div class="img-wrap">
-      <img src="${a.img}">
+      <img src="${post.image || 'https://via.placeholder.com/600x400'}" alt="${post.title}">
     </div>
-    <div class="card-title">${a.title}</div>
+    <div class="card-title">${post.title}</div>
   `;
 
-  div.onclick = () => {
-    localStorage.setItem("articleTitle", a.title);
-    window.location.href = "article.html";
-  };
+  card.addEventListener('click', () => {
+    window.location.href = `article.html?slug=${encodeURIComponent(post.slug)}`;
+  });
 
-  track.appendChild(div);
+  track.appendChild(card);
 });
-
 </script>
+
+</body>
+</html>
