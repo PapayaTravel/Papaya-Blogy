@@ -1,111 +1,104 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-<meta charset="UTF-8">
-<title>Papaya Blogy</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papaya Blogy</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Montserrat:wght@700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-  <a href="index.html" class="logo-link">
-    <img src="image.png" class="logo">
-    Papaya
-  </a>
-</header>
+  <header>
+    <a href="index.html" class="logo-link">
+      <img src="image.png" class="logo" alt="Papaya logo">
+      Papaya
+    </a>
+  </header>
 
-<div class="slider">
-  <div class="slider-track" id="sliderTrack"></div>
-</div>
-
-<section class="intro">
-
-  <h1>Papaya Blogy</h1>
-
-  <p class="center-text">
-    Blogy a príspevky z nášho Discord servera.
-  </p>
-
-  <a href="https://discord.gg/pJyMf2Jxba" class="discord-btn">
-    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
-    Discord Papaya
-  </a>
-
-</section>
-
-<h2 class="fancy">Oficiálne blogy servera Papaya</h2>
-
-<div class="categories">
-  <a href="category.html?cat=top" class="cat-btn">Top destinácie</a>
-  <a href="category.html?cat=tipy" class="cat-btn">Tipy a triky</a>
-  <a href="category.html?cat=problemy" class="cat-btn">Problémy a nástrahy</a>
-  <a href="category.html?cat=zaujimavosti" class="cat-btn">Zaujímavosti</a>
-  <a href="category.html?cat=info" class="cat-btn">Informácie</a>
-</div>
-
-<h2 class="fancy">Komunitné príspevky</h2>
-
-<div class="categories">
-  <a href="category.html?cat=dennik" class="cat-btn">Denníky</a>
-
-  <p class="under-text">
-    Denníky sú osobné skúsenosti členov komunity.
-  </p>
-</div>
-
-<script type="module">
-import { createClient } from 'https://esm.sh/@sanity/client@6';
-
-const client = createClient({
-  projectId: 'qmdaowg9',
-  dataset: 'production',
-  apiVersion: '2025-01-01',
-  useCdn: true
-});
-
-const track = document.getElementById('sliderTrack');
-
-const posts = await client.fetch(`
-  *[_type == "post"] | order(publishedAt desc) {
-    _id,
-    title,
-    "slug": slug.current,
-    "image": mainImage.asset->url
-  }
-`);
-
-const withViews = posts.map(post => {
-  const views = parseInt(localStorage.getItem('views_' + post._id) || '0', 10);
-  return { ...post, views };
-});
-
-const top10 = [...withViews]
-  .sort((a, b) => b.views - a.views)
-  .slice(0, 10);
-
-const looped = [...top10, ...top10];
-
-looped.forEach(post => {
-  const card = document.createElement('div');
-  card.className = 'card';
-
-  card.innerHTML = `
-    <div class="img-wrap">
-      <img src="${post.image || 'https://via.placeholder.com/600x400'}" alt="${post.title}">
+  <div class="slider-shell">
+    <div class="slider">
+      <div class="slider-track" id="sliderTrack"></div>
     </div>
-    <div class="card-title">${post.title}</div>
-  `;
+  </div>
 
-  card.addEventListener('click', () => {
-    window.location.href = `article.html?slug=${encodeURIComponent(post.slug)}`;
-  });
+  <section class="intro">
+    <h1>Papaya Blogy</h1>
 
-  track.appendChild(card);
-});
-</script>
+    <p class="center-text intro-text">
+      Blogy a príspevky z nášho Discord servera.
+    </p>
+
+    <a href="https://discord.gg/pJyMf2Jxba" class="discord-btn" target="_blank" rel="noopener">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+      Discord Papaya
+    </a>
+  </section>
+
+  <h2 class="fancy">Oficiálne blogy servera Papaya</h2>
+
+  <div class="categories">
+    <a href="category.html?cat=top" class="cat-btn">Top destinácie</a>
+    <a href="category.html?cat=tipy" class="cat-btn">Tipy a triky</a>
+    <a href="category.html?cat=problemy" class="cat-btn">Problémy a nástrahy</a>
+    <a href="category.html?cat=zaujimavosti" class="cat-btn">Zaujímavosti</a>
+    <a href="category.html?cat=info" class="cat-btn">Informácie</a>
+  </div>
+
+  <h2 class="fancy">Komunitné príspevky</h2>
+
+  <div class="categories">
+    <a href="category.html?cat=dennik" class="cat-btn">Denníky</a>
+
+    <p class="under-text">
+      Denníky sú osobné skúsenosti členov komunity.
+    </p>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@sanity/client@6';
+
+    const client = createClient({
+      projectId: 'qmdaowg9',
+      dataset: 'production',
+      apiVersion: '2025-01-01',
+      useCdn: true
+    });
+
+    const track = document.getElementById('sliderTrack');
+
+    const posts = await client.fetch(`
+      *[_type == "post"] | order(publishedAt desc) {
+        _id,
+        title,
+        publishedAt,
+        "slug": slug.current,
+        "image": mainImage.asset->url
+      }
+    `);
+
+    const top10 = [...posts].slice(0, 10);
+    const looped = [...top10, ...top10];
+
+    looped.forEach(post => {
+      const card = document.createElement('div');
+      card.className = 'card slider-card';
+
+      card.innerHTML = `
+        <div class="img-wrap">
+          <img src="${post.image || 'https://via.placeholder.com/600x400'}" alt="${post.title}" loading="lazy">
+        </div>
+        <div class="card-title">${post.title}</div>
+      `;
+
+      card.addEventListener('click', () => {
+        window.location.href = \`article.html?slug=\${encodeURIComponent(post.slug)}\`;
+      });
+
+      track.appendChild(card);
+    });
+  </script>
 
 </body>
 </html>
