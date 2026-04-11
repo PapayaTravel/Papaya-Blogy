@@ -25,6 +25,7 @@
 
 <script type="module">
 import { createClient } from 'https://esm.sh/@sanity/client@6';
+import imageUrlBuilder from 'https://esm.sh/@sanity/image-url';
 import { toHTML } from 'https://esm.sh/@portabletext/to-html';
 
 const client = createClient({
@@ -33,6 +34,9 @@ const client = createClient({
   apiVersion: '2025-01-01',
   useCdn: true
 });
+
+const builder = imageUrlBuilder(client);
+const urlFor = (source) => builder.image(source).auto('format').fit('max').width(1200).url();
 
 const params = new URLSearchParams(window.location.search);
 const slug = params.get('slug');
@@ -44,7 +48,8 @@ if (!slug) {
     *[_type == "post" && slug.current == $slug][0]{
       _id,
       title,
-      body
+      body,
+      discord
     }
   `, { slug });
 
@@ -52,7 +57,31 @@ if (!slug) {
     document.getElementById('title').innerText = 'Článok sa nenašiel';
   } else {
     document.getElementById('title').innerText = post.title;
-    document.getElementById('articleContent').innerHTML = toHTML(post.body || []);
+
+    const html = toHTML(post.body || [], {
+      components: {
+        types: {
+          image: ({value}) => {
+            return `<img src="${urlFor(value)}" alt="" class="article-inline-image">`;
+          }
+        },
+        block: {
+          normal: ({children}) => `<p>${children}</p>`,
+          h1: ({children}) => `<h1>${children}</h1>`,
+          h2: ({children}) => `<h2>${children}</h2>`,
+          h3: ({children}) => `<h3>${children}</h3>`,
+          blockquote: ({children}) => `<blockquote>${children}</blockquote>`
+        }
+      }
+    });
+
+    document.getElementById('articleContent').innerHTML = html;
+
+    const discordLink = document.getElementById('discordLink');
+    if (post.discord) {
+      discordLink.href = post.discord;
+      discordLink.style.display = 'inline-flex';
+    }
 
     const viewedKey = `viewed_${post._id}`;
     const viewsKey = `views_${post._id}`;
