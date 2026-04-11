@@ -98,6 +98,7 @@ header {
   gap: 15px;
   align-items: center;
   padding: 15px;
+  flex-wrap: wrap;
 }
 
 .filter-btn, .sort-btn {
@@ -115,6 +116,7 @@ header {
   gap: 10px;
   align-items: center;
   transition: all 0.3s ease;
+  flex-wrap: wrap;
 }
 
 /* dropdown */
@@ -136,7 +138,7 @@ header {
   background: #eee;
 }
 
-/* TAGY (FIX) */
+/* TAGY */
 .tag {
   background: white;
   color: black;
@@ -177,7 +179,7 @@ header {
   transform: scale(1.03);
 }
 
-/* obrázok - mierne zmenšený pre uvoľnenie miesta pre text */
+/* obrázok */
 .img-wrap {
   height: 80%;
   overflow: hidden;
@@ -189,7 +191,7 @@ header {
   object-fit: cover;
 }
 
-/* názov - zvýšený, aby bol text viditeľnejší (z pôvodných 7.5% na 15%) */
+/* názov */
 .card-title {
   border-top: 1px solid #ccc;
   padding: 8px 14px;
@@ -211,6 +213,7 @@ header {
   width: 800px;
   padding: 40px;
 }
+
 /* SLIDER */
 .slider {
   overflow: hidden;
@@ -230,6 +233,15 @@ header {
   height: 250px;
 }
 
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+.slider .card:hover {
+  transform: scale(1.08);
+  z-index: 5;
+}
+
 @keyframes scrollSlider {
   0% {
     transform: translateX(0%);
@@ -237,14 +249,4 @@ header {
   100% {
     transform: translateX(-50%);
   }
-}
- /* STOP SLIDER PRI HOVER */
-.slider-track:hover {
-  animation-play-state: paused;
-}
-
-/* HOVER efekt na slider kartách */
-.slider .card:hover {
-  transform: scale(1.08);
-  z-index: 5;
 }
