@@ -1,189 +1,186 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-<meta charset="UTF-8">
-<title>Kategória</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kategória</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Montserrat:wght@600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <a href="index.html" class="logo-link">
-    <img src="image.png" class="logo">
-    Papaya
-  </a>
-</header>
+  <header>
+    <a href="index.html" class="logo-link">
+      <img src="image.png" class="logo" alt="Papaya logo">
+      Papaya
+    </a>
+  </header>
 
-<div class="top-bar">
-  <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▶</button>
+  <div class="top-bar">
+    <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▶</button>
 
-  <div id="filterContent" class="filter-content">
-    <button id="sortBtn" class="sort-btn" onclick="toggleSort()">Zoradiť podľa ▼</button>
+    <div id="filterContent" class="filter-content">
+      <button id="sortBtn" class="sort-btn" onclick="toggleSort()">Zoradiť podľa ▼</button>
 
-    <div id="sortOptions" class="sort-options">
-      <div onclick="applySort('new')">Najnovšie</div>
-      <div onclick="applySort('old')">Najstaršie</div>
-      <div onclick="applySort('top')">Top články</div>
+      <div id="sortOptions" class="sort-options">
+        <div onclick="applySort('new')">Najnovšie</div>
+        <div onclick="applySort('old')">Najstaršie</div>
+      </div>
+
+      <span class="tags-label">Tagy:</span>
+      <div id="tagList" class="tag-list"></div>
     </div>
 
-    <span>Tagy:</span>
-    <div id="tagList" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+    <input type="text" id="search" placeholder="Hľadať článok...">
   </div>
 
-  <input type="text" id="search" placeholder="Hľadať článok...">
-</div>
+  <section class="gallery" id="gallery"></section>
 
-<section class="gallery" id="gallery"></section>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@sanity/client@6';
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@sanity/client@6';
+    const client = createClient({
+      projectId: 'qmdaowg9',
+      dataset: 'production',
+      apiVersion: '2025-01-01',
+      useCdn: true
+    });
 
-const client = createClient({
-  projectId: 'qmdaowg9',
-  dataset: 'production',
-  apiVersion: '2025-01-01',
-  useCdn: true
-});
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat') || 'top';
 
-const params = new URLSearchParams(window.location.search);
-const cat = params.get('cat') || 'top';
+    const categoryMap = {
+      top: 'Top Destinácie',
+      tipy: 'Tipy a Triky',
+      problemy: 'Problémy a Nástrahy',
+      zaujimavosti: 'Zaujímavosti',
+      info: 'Informácie',
+      dennik: 'Denníky'
+    };
 
-const categoryMap = {
-  top: 'Top Destinácie',
-  tipy: 'Tipy a Triky',
-  problemy: 'Problémy a Nástrahy',
-  zaujimavosti: 'Zaujímavosti',
-  info: 'Informácie',
-  dennik: 'Denníky'
-};
+    const categoryTitle = categoryMap[cat] || 'Top Destinácie';
 
-const categoryTitle = categoryMap[cat] || 'Top Destinácie';
+    const gallery = document.getElementById('gallery');
+    const searchInput = document.getElementById('search');
+    const tagList = document.getElementById('tagList');
 
-const gallery = document.getElementById('gallery');
-const searchInput = document.getElementById('search');
-const tagList = document.getElementById('tagList');
+    let allPosts = [];
+    let activeTags = [];
+    let currentSort = 'new';
 
-let allPosts = [];
-let activeTags = [];
-let currentSort = 'new';
+    window.toggleFilter = function () {
+      const fc = document.getElementById('filterContent');
+      fc.style.display = fc.style.display === 'flex' ? 'none' : 'flex';
+    };
 
-window.toggleFilter = function () {
-  const fc = document.getElementById('filterContent');
-  fc.style.display = fc.style.display === 'flex' ? 'none' : 'flex';
-};
+    window.toggleSort = function () {
+      const so = document.getElementById('sortOptions');
+      so.style.display = so.style.display === 'block' ? 'none' : 'block';
+    };
 
-window.toggleSort = function () {
-  const so = document.getElementById('sortOptions');
-  so.style.display = so.style.display === 'block' ? 'none' : 'block';
-};
+    window.applySort = function (type) {
+      currentSort = type;
 
-window.applySort = function (type) {
-  currentSort = type;
+      const labels = {
+        new: 'Najnovšie',
+        old: 'Najstaršie'
+      };
 
-  const labels = {
-    new: 'Najnovšie',
-    old: 'Najstaršie',
-    top: 'Top články'
-  };
-
-  document.getElementById('sortBtn').innerText = `${labels[type]} ▼`;
-  document.getElementById('sortOptions').style.display = 'none';
-  renderPosts();
-};
-
-function buildTags(posts) {
-  const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []))];
-  tagList.innerHTML = '';
-
-  uniqueTags.forEach(tag => {
-    const el = document.createElement('span');
-    el.className = 'tag';
-    el.dataset.tag = tag;
-    el.innerText = tag;
-
-    el.addEventListener('click', () => {
-      if (activeTags.includes(tag)) {
-        activeTags = activeTags.filter(t => t !== tag);
-        el.classList.remove('active-tag');
-      } else {
-        activeTags.push(tag);
-        el.classList.add('active-tag');
-      }
+      document.getElementById('sortBtn').innerText = `${labels[type]} ▼`;
+      document.getElementById('sortOptions').style.display = 'none';
       renderPosts();
-    });
+    };
 
-    tagList.appendChild(el);
-  });
-}
+    function buildTags(posts) {
+      const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []))];
+      tagList.innerHTML = '';
 
-function renderPosts() {
-  const search = searchInput.value.trim().toLowerCase();
-  gallery.innerHTML = '';
+      uniqueTags.forEach(tag => {
+        const el = document.createElement('span');
+        el.className = 'tag';
+        el.dataset.tag = tag;
+        el.innerText = tag;
 
-  let posts = [...allPosts];
+        el.addEventListener('click', () => {
+          if (activeTags.includes(tag)) {
+            activeTags = activeTags.filter(t => t !== tag);
+            el.classList.remove('active-tag');
+          } else {
+            activeTags.push(tag);
+            el.classList.add('active-tag');
+          }
+          renderPosts();
+        });
 
-  if (activeTags.length > 0) {
-    posts = posts.filter(post => {
-      const tags = post.tags || [];
-      return activeTags.some(tag => tags.includes(tag));
-    });
-  }
+        tagList.appendChild(el);
+      });
+    }
 
-  if (search) {
-    posts = posts.filter(post => post.title.toLowerCase().includes(search));
-  }
+    function renderPosts() {
+      const search = searchInput.value.trim().toLowerCase();
+      gallery.innerHTML = '';
 
-  if (currentSort === 'new') {
-    posts.sort((a, b) => new Date(b.publishedAt || b._createdAt) - new Date(a.publishedAt || a._createdAt));
-  } else if (currentSort === 'old') {
-    posts.sort((a, b) => new Date(a.publishedAt || a._createdAt) - new Date(b.publishedAt || b._createdAt));
-  } else if (currentSort === 'top') {
-    posts.sort((a, b) => b.views - a.views);
-  }
+      let posts = [...allPosts];
 
-  posts.forEach(post => {
-    const card = document.createElement('div');
-    card.className = 'card';
+      if (activeTags.length > 0) {
+        posts = posts.filter(post => {
+          const tags = post.tags || [];
+          return activeTags.some(tag => tags.includes(tag));
+        });
+      }
 
-    card.innerHTML = `
-      <div class="img-wrap">
-        <img src="${post.image || 'https://via.placeholder.com/600x400'}" alt="${post.title}">
-      </div>
-      <div class="card-title">${post.title}</div>
-    `;
+      if (search) {
+        posts = posts.filter(post => post.title.toLowerCase().includes(search));
+      }
 
-    card.addEventListener('click', () => {
-      window.location.href = `article.html?slug=${encodeURIComponent(post.slug)}`;
-    });
+      if (currentSort === 'new') {
+        posts.sort((a, b) => new Date(b.publishedAt || b._createdAt) - new Date(a.publishedAt || a._createdAt));
+      } else if (currentSort === 'old') {
+        posts.sort((a, b) => new Date(a.publishedAt || a._createdAt) - new Date(b.publishedAt || b._createdAt));
+      }
 
-    gallery.appendChild(card);
-  });
-}
+      if (posts.length === 0) {
+        gallery.innerHTML = `<div class="empty-state">Žiadne články pre toto filtrovanie.</div>`;
+        return;
+      }
 
-searchInput.addEventListener('input', renderPosts);
+      posts.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-allPosts = await client.fetch(`
-  *[_type == "post" && $categoryTitle in categories[]->title] | order(publishedAt desc) {
-    _id,
-    _createdAt,
-    publishedAt,
-    title,
-    "slug": slug.current,
-    "image": mainImage.asset->url,
-    tags
-  }
-`, { categoryTitle });
+        card.innerHTML = `
+          <div class="img-wrap">
+            <img src="${post.image || 'https://via.placeholder.com/600x400'}" alt="${post.title}" loading="lazy">
+          </div>
+          <div class="card-title">${post.title}</div>
+        `;
 
-allPosts = allPosts.map(post => {
-  const views = parseInt(localStorage.getItem('views_' + post._id) || '0', 10);
-  return { ...post, views };
-});
+        card.addEventListener('click', () => {
+          window.location.href = \`article.html?slug=\${encodeURIComponent(post.slug)}\`;
+        });
 
-buildTags(allPosts);
-renderPosts();
-</script>
+        gallery.appendChild(card);
+      });
+    }
+
+    searchInput.addEventListener('input', renderPosts);
+
+    allPosts = await client.fetch(`
+      *[_type == "post" && $categoryTitle in categories[]->title] | order(publishedAt desc) {
+        _id,
+        _createdAt,
+        publishedAt,
+        title,
+        "slug": slug.current,
+        "image": mainImage.asset->url,
+        tags
+      }
+    `, { categoryTitle });
+
+    buildTags(allPosts);
+    renderPosts();
+  </script>
 
 </body>
 </html>
