@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kategória</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,14 +18,14 @@
   </header>
 
   <div class="top-bar">
-    <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▶</button>
+    <button id="filterBtn" class="filter-btn" type="button">Filtrovať ▶</button>
 
     <div id="filterContent" class="filter-content">
-      <button id="sortBtn" class="sort-btn" onclick="toggleSort()">Zoradiť podľa ▼</button>
+      <button id="sortBtn" class="sort-btn" type="button">Zoradiť podľa ▼</button>
 
       <div id="sortOptions" class="sort-options">
-        <div onclick="applySort('new')">Najnovšie</div>
-        <div onclick="applySort('old')">Najstaršie</div>
+        <div data-sort="new">Najnovšie</div>
+        <div data-sort="old">Najstaršie</div>
       </div>
 
       <span class="tags-label">Tagy:</span>
@@ -64,33 +64,39 @@
     const gallery = document.getElementById('gallery');
     const searchInput = document.getElementById('search');
     const tagList = document.getElementById('tagList');
+    const filterBtn = document.getElementById('filterBtn');
+    const filterContent = document.getElementById('filterContent');
+    const sortBtn = document.getElementById('sortBtn');
+    const sortOptions = document.getElementById('sortOptions');
 
     let allPosts = [];
     let activeTags = [];
     let currentSort = 'new';
 
-    window.toggleFilter = function () {
-      const fc = document.getElementById('filterContent');
-      fc.style.display = fc.style.display === 'flex' ? 'none' : 'flex';
-    };
+    filterBtn.addEventListener('click', () => {
+      const isOpen = filterContent.classList.toggle('show-flex');
+      filterBtn.textContent = isOpen ? 'Filtrovať ▼' : 'Filtrovať ▶';
+      if (!isOpen) sortOptions.classList.remove('show-block');
+    });
 
-    window.toggleSort = function () {
-      const so = document.getElementById('sortOptions');
-      so.style.display = so.style.display === 'block' ? 'none' : 'block';
-    };
+    sortBtn.addEventListener('click', () => {
+      sortOptions.classList.toggle('show-block');
+    });
 
-    window.applySort = function (type) {
-      currentSort = type;
+    sortOptions.querySelectorAll('div').forEach(option => {
+      option.addEventListener('click', () => {
+        currentSort = option.dataset.sort;
 
-      const labels = {
-        new: 'Najnovšie',
-        old: 'Najstaršie'
-      };
+        const labels = {
+          new: 'Najnovšie',
+          old: 'Najstaršie'
+        };
 
-      document.getElementById('sortBtn').innerText = `${labels[type]} ▼`;
-      document.getElementById('sortOptions').style.display = 'none';
-      renderPosts();
-    };
+        sortBtn.textContent = `${labels[currentSort]} ▼`;
+        sortOptions.classList.remove('show-block');
+        renderPosts();
+      });
+    });
 
     function buildTags(posts) {
       const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []))];
@@ -157,7 +163,7 @@
         `;
 
         card.addEventListener('click', () => {
-          window.location.href = \`article.html?slug=\${encodeURIComponent(post.slug)}\`;
+          window.location.href = `article.html?slug=${encodeURIComponent(post.slug)}`;
         });
 
         gallery.appendChild(card);
