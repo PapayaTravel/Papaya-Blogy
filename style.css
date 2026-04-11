@@ -250,3 +250,33 @@ header {
     transform: translateX(-50%);
   }
 }
+/* ARTICLE CONTENT */
+#articleContent {
+  line-height: 1.8;
+}
+
+#articleContent p {
+  margin: 0 0 18px 0;
+}
+
+#articleContent h1,
+#articleContent h2,
+#articleContent h3 {
+  margin-top: 28px;
+  margin-bottom: 14px;
+}
+
+#articleContent blockquote {
+  border-left: 4px solid #ddd;
+  margin: 20px 0;
+  padding: 10px 16px;
+  color: #555;
+  background: #fafafa;
+}
+
+.article-inline-image {
+  width: 100%;
+  display: block;
+  margin: 24px 0;
+  border-radius: 8px;
+}
