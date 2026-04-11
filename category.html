@@ -17,12 +17,9 @@
 </header>
 
 <div class="top-bar">
-
-  <!-- ŠÍPKA DOPRAVA -->
   <button id="filterBtn" class="filter-btn" onclick="toggleFilter()">Filtrovať ▶</button>
 
   <div id="filterContent" class="filter-content">
-    
     <button id="sortBtn" class="sort-btn" onclick="toggleSort()">Zoradiť podľa ▼</button>
 
     <div id="sortOptions" class="sort-options">
@@ -32,139 +29,160 @@
     </div>
 
     <span>Tagy:</span>
-    <span class="tag" data-tag="Tag1" onclick="toggleTag(this)">Tag 1</span>
-    <span class="tag" data-tag="Tag2" onclick="toggleTag(this)">Tag 2</span>
-    <span class="tag" data-tag="Tag3" onclick="toggleTag(this)">Tag 3</span>
-
+    <div id="tagList" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
   </div>
 
   <input type="text" id="search" placeholder="Hľadať článok...">
-
 </div>
 
-<section class="gallery" id="gallery">
+<section class="gallery" id="gallery"></section>
 
-  <!-- KARTA -->
-  <div class="card" data-title="Prvý článok" data-tags="Tag1,Tag2" onclick="openArticle(this)">
-    
-    <div class="img-wrap">
-      <img src="https://via.placeholder.com/600x400">
-    </div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@sanity/client@6';
 
-    <div class="card-title">Prvý článok</div>
-
-  </div>
-
-  <div class="card" data-title="Druhý článok" data-tags="Tag2,Tag3" onclick="openArticle(this)">
-    
-    <div class="img-wrap">
-      <img src="https://via.placeholder.com/600x400">
-    </div>
-
-    <div class="card-title">Druhý článok</div>
-
-  </div>
-
-  <div class="card" data-title="Tretí článok" data-tags="Tag1" onclick="openArticle(this)">
-    
-    <div class="img-wrap">
-      <img src="https://via.placeholder.com/600x400">
-    </div>
-
-    <div class="card-title">Tretí článok</div>
-
-  </div>
-
-</section>
-
-<script>
-
-let activeTags = [];
-window.onload = () => {
-  activeTags = [];
-  document.querySelectorAll(".tag").forEach(t => t.classList.remove("active-tag"));
-}
-// FILTER
-function toggleFilter() {
-  const fc = document.getElementById("filterContent");
-  fc.style.display = fc.style.display === "flex" ? "none" : "flex";
-}
-
-// SORT MENU
-function toggleSort() {
-  const so = document.getElementById("sortOptions");
-  so.style.display = so.style.display === "block" ? "none" : "block";
-}
-
-// SORT LOGIKA
-function applySort(type) {
-  const gallery = document.getElementById("gallery");
-  const cards = Array.from(gallery.children);
-
-  if(type === "new") {
-    cards.reverse(); // jednoduché riešenie
-  }
-
-  if(type === "old") {
-    cards.reverse();
-  }
-
-  if(type === "top") {
-    cards.sort((a,b) => b.dataset.title.length - a.dataset.title.length);
-  }
-
-  cards.forEach(c => gallery.appendChild(c));
-
-  document.getElementById("sortBtn").innerText = `Zoradiť podľa: ${type} ▼`;
-  toggleSort();
-}
-
-// SEARCH
-document.getElementById("search").addEventListener("keyup", function() {
-  let value = this.value.toLowerCase();
-  let cards = document.querySelectorAll(".card");
-
-  cards.forEach(card => {
-    let title = card.getAttribute("data-title").toLowerCase();
-    card.style.display = title.includes(value) ? "flex" : "none";
-  });
+const client = createClient({
+  projectId: 'qmdaowg9',
+  dataset: 'production',
+  apiVersion: '2025-01-01',
+  useCdn: true
 });
 
-// TAGY
-function toggleTag(el) {
-  const tag = el.dataset.tag;
+const params = new URLSearchParams(window.location.search);
+const cat = params.get('cat') || 'top';
 
-  if(activeTags.includes(tag)) {
-    activeTags = activeTags.filter(t => t !== tag);
-    el.classList.remove("active-tag");
-  } else {
-    activeTags.push(tag);
-    el.classList.add("active-tag");
-  }
+const categoryMap = {
+  top: 'Top Destinácie',
+  tipy: 'Tipy a Triky',
+  problemy: 'Problémy a Nástrahy',
+  zaujimavosti: 'Zaujímavosti',
+  info: 'Informácie',
+  dennik: 'Denníky'
+};
 
-  filterByTag();
-}
+const categoryTitle = categoryMap[cat] || 'Top Destinácie';
 
-function filterByTag() {
-  const cards = document.querySelectorAll(".card");
+const gallery = document.getElementById('gallery');
+const searchInput = document.getElementById('search');
+const tagList = document.getElementById('tagList');
 
-  cards.forEach(card => {
-    const tags = card.dataset.tags.split(",");
+let allPosts = [];
+let activeTags = [];
+let currentSort = 'new';
 
-    if(activeTags.length === 0 || activeTags.some(t => tags.includes(t))) {
-      card.style.display = "flex";
-    } else {
-      card.style.display = "none";
-    }
+window.toggleFilter = function () {
+  const fc = document.getElementById('filterContent');
+  fc.style.display = fc.style.display === 'flex' ? 'none' : 'flex';
+};
+
+window.toggleSort = function () {
+  const so = document.getElementById('sortOptions');
+  so.style.display = so.style.display === 'block' ? 'none' : 'block';
+};
+
+window.applySort = function (type) {
+  currentSort = type;
+
+  const labels = {
+    new: 'Najnovšie',
+    old: 'Najstaršie',
+    top: 'Top články'
+  };
+
+  document.getElementById('sortBtn').innerText = `${labels[type]} ▼`;
+  document.getElementById('sortOptions').style.display = 'none';
+  renderPosts();
+};
+
+function buildTags(posts) {
+  const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []))];
+  tagList.innerHTML = '';
+
+  uniqueTags.forEach(tag => {
+    const el = document.createElement('span');
+    el.className = 'tag';
+    el.dataset.tag = tag;
+    el.innerText = tag;
+
+    el.addEventListener('click', () => {
+      if (activeTags.includes(tag)) {
+        activeTags = activeTags.filter(t => t !== tag);
+        el.classList.remove('active-tag');
+      } else {
+        activeTags.push(tag);
+        el.classList.add('active-tag');
+      }
+      renderPosts();
+    });
+
+    tagList.appendChild(el);
   });
 }
 
-// OPEN ARTICLE
-function openArticle(card) {
-  localStorage.setItem("articleTitle", card.getAttribute("data-title"));
-  window.location.href = "article.html";
+function renderPosts() {
+  const search = searchInput.value.trim().toLowerCase();
+  gallery.innerHTML = '';
+
+  let posts = [...allPosts];
+
+  if (activeTags.length > 0) {
+    posts = posts.filter(post => {
+      const tags = post.tags || [];
+      return activeTags.some(tag => tags.includes(tag));
+    });
+  }
+
+  if (search) {
+    posts = posts.filter(post => post.title.toLowerCase().includes(search));
+  }
+
+  if (currentSort === 'new') {
+    posts.sort((a, b) => new Date(b.publishedAt || b._createdAt) - new Date(a.publishedAt || a._createdAt));
+  } else if (currentSort === 'old') {
+    posts.sort((a, b) => new Date(a.publishedAt || a._createdAt) - new Date(b.publishedAt || b._createdAt));
+  } else if (currentSort === 'top') {
+    posts.sort((a, b) => b.views - a.views);
+  }
+
+  posts.forEach(post => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    card.innerHTML = `
+      <div class="img-wrap">
+        <img src="${post.image || 'https://via.placeholder.com/600x400'}" alt="${post.title}">
+      </div>
+      <div class="card-title">${post.title}</div>
+    `;
+
+    card.addEventListener('click', () => {
+      window.location.href = `article.html?slug=${encodeURIComponent(post.slug)}`;
+    });
+
+    gallery.appendChild(card);
+  });
 }
 
+searchInput.addEventListener('input', renderPosts);
+
+allPosts = await client.fetch(`
+  *[_type == "post" && $categoryTitle in categories[]->title] | order(publishedAt desc) {
+    _id,
+    _createdAt,
+    publishedAt,
+    title,
+    "slug": slug.current,
+    "image": mainImage.asset->url,
+    tags
+  }
+`, { categoryTitle });
+
+allPosts = allPosts.map(post => {
+  const views = parseInt(localStorage.getItem('views_' + post._id) || '0', 10);
+  return { ...post, views };
+});
+
+buildTags(allPosts);
+renderPosts();
 </script>
 
 </body>
