@@ -26,6 +26,7 @@
       <div id="sortOptions" class="sort-options">
         <div data-sort="new">Najnovšie</div>
         <div data-sort="old">Najstaršie</div>
+        <div data-sort="top">Top články</div>
       </div>
 
       <span class="tags-label">Tagy:</span>
@@ -89,7 +90,8 @@
 
         const labels = {
           new: 'Najnovšie',
-          old: 'Najstaršie'
+          old: 'Najstaršie',
+          top: 'Top články'
         };
 
         sortBtn.textContent = `${labels[currentSort]} ▼`;
@@ -144,6 +146,8 @@
         posts.sort((a, b) => new Date(b.publishedAt || b._createdAt) - new Date(a.publishedAt || a._createdAt));
       } else if (currentSort === 'old') {
         posts.sort((a, b) => new Date(a.publishedAt || a._createdAt) - new Date(b.publishedAt || b._createdAt));
+      } else if (currentSort === 'top') {
+        posts.sort((a, b) => b.views - a.views);
       }
 
       if (posts.length === 0) {
@@ -183,6 +187,11 @@
         tags
       }
     `, { categoryTitle });
+
+    allPosts = allPosts.map(post => {
+      const views = parseInt(localStorage.getItem('views_' + post._id) || '0', 10);
+      return { ...post, views };
+    });
 
     buildTags(allPosts);
     renderPosts();
