@@ -18,31 +18,51 @@
 <div class="article-wrapper">
   <div class="article">
     <h1 id="title"></h1>
-    <p>Obsah článku...</p>
-    <a href="https://discord.com" class="discord-link">Diskusia na Discorde</a>
+    <div id="articleContent"></div>
+    <a href="#" id="discordLink" class="discord-link" target="_blank" rel="noopener" style="display:none;">Diskusia na Discorde</a>
   </div>
 </div>
 
-<script>
-let title = localStorage.getItem("articleTitle");
-document.getElementById("title").innerText = title;
+<script type="module">
+import { createClient } from 'https://esm.sh/@sanity/client@6';
+import { toHTML } from 'https://esm.sh/@portabletext/to-html';
 
-// VIEW SYSTEM
-let key = "viewed_" + title;
+const client = createClient({
+  projectId: 'qmdaowg9',
+  dataset: 'production',
+  apiVersion: '2025-01-01',
+  useCdn: true
+});
 
-if(!localStorage.getItem(key)) {
+const params = new URLSearchParams(window.location.search);
+const slug = params.get('slug');
 
-  let viewsKey = "views_" + title;
+if (!slug) {
+  document.getElementById('title').innerText = 'Článok sa nenašiel';
+} else {
+  const post = await client.fetch(`
+    *[_type == "post" && slug.current == $slug][0]{
+      _id,
+      title,
+      body
+    }
+  `, { slug });
 
-  let current = localStorage.getItem(viewsKey);
-  current = current ? parseInt(current) : 0;
+  if (!post) {
+    document.getElementById('title').innerText = 'Článok sa nenašiel';
+  } else {
+    document.getElementById('title').innerText = post.title;
+    document.getElementById('articleContent').innerHTML = toHTML(post.body || []);
 
-  current++;
+    const viewedKey = `viewed_${post._id}`;
+    const viewsKey = `views_${post._id}`;
 
-  localStorage.setItem(viewsKey, current);
-
-  // označí že zariadenie už videlo tento článok
-  localStorage.setItem(key, true);
+    if (!localStorage.getItem(viewedKey)) {
+      const current = parseInt(localStorage.getItem(viewsKey) || '0', 10);
+      localStorage.setItem(viewsKey, String(current + 1));
+      localStorage.setItem(viewedKey, 'true');
+    }
+  }
 }
 </script>
 
