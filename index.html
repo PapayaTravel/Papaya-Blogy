@@ -58,6 +58,12 @@
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@sanity/client@6';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
     const client = createClient({
       projectId: 'qmdaowg9',
@@ -66,9 +72,22 @@
       useCdn: true
     });
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMX4SM_yMHrnBbDdieZA4nnuIc3Njx1qU",
+      authDomain: "papaya-8f6fc.firebaseapp.com",
+      projectId: "papaya-8f6fc",
+      storageBucket: "papaya-8f6fc.firebasestorage.app",
+      messagingSenderId: "878790020885",
+      appId: "1:878790020885:web:0a9e5989f28ddf9a22231c",
+      measurementId: "G-61J6C647F7"
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+
     const track = document.getElementById('sliderTrack');
 
-    const posts = await client.fetch(`
+    let posts = await client.fetch(`
       *[_type == "post"] | order(publishedAt desc) {
         _id,
         title,
@@ -78,7 +97,16 @@
       }
     `);
 
-    const top10 = [...posts].slice(0, 10);
+    posts = await Promise.all(posts.map(async post => {
+      const snap = await getDoc(doc(db, "postViews", post._id));
+      const views = snap.exists() ? (snap.data().count || 0) : 0;
+      return { ...post, views };
+    }));
+
+    const top10 = [...posts]
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 10);
+
     const looped = [...top10, ...top10];
 
     looped.forEach(post => {
@@ -93,7 +121,7 @@
       `;
 
       card.addEventListener('click', () => {
-        window.location.href = \`article.html?slug=\${encodeURIComponent(post.slug)}\`;
+        window.location.href = `article.html?slug=${encodeURIComponent(post.slug)}`;
       });
 
       track.appendChild(card);
@@ -102,4 +130,3 @@
 
 </body>
 </html>
-
