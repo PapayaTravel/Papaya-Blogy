@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papaya Admin Views</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-link">
+    <img src="image.png" class="logo" alt="Papaya logo">
+    Papaya
+  </a>
+</header>
+
+<div class="article-wrapper">
+  <div class="article">
+    <h1>Views článkov</h1>
+    <div id="viewsList">Načítavam...</div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDMX4SM_yMHrnBbDdieZA4nnuIc3Njx1qU",
+    authDomain: "papaya-8f6fc.firebaseapp.com",
+    projectId: "papaya-8f6fc",
+    storageBucket: "papaya-8f6fc.firebasestorage.app",
+    messagingSenderId: "878790020885",
+    appId: "1:878790020885:web:0a9e5989f28ddf9a22231c",
+    measurementId: "G-61J6C647F7"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getFirestore(firebaseApp);
+
+  const viewsList = document.getElementById("viewsList");
+  const snap = await getDocs(collection(db, "postViews"));
+
+  const rows = [];
+  snap.forEach(docSnap => {
+    const data = docSnap.data();
+    rows.push({
+      title: data.title || docSnap.id,
+      count: data.count || 0,
+      slug: data.slug || ""
+    });
+  });
+
+  rows.sort((a, b) => b.count - a.count);
+
+  if (rows.length === 0) {
+    viewsList.innerHTML = "<p>Zatiaľ žiadne views.</p>";
+  } else {
+    viewsList.innerHTML = rows.map(row => `
+      <div style="padding:12px 0; border-bottom:1px solid #ddd;">
+        <strong>${row.title}</strong><br>
+        Views: ${row.count}
+      </div>
+    `).join("");
+  }
+</script>
+
+</body>
+</html>
