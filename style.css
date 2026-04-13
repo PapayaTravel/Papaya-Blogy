@@ -28,9 +28,9 @@ body::before {
   pointer-events: none;
   z-index: -1;
   background:
-    linear-gradient(rgba(245, 230, 211, 0.85), rgba(245, 230, 211, 0.85)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='%23000000' stroke-opacity='0.25' stroke-width='1.2'%3E%3Cpath d='M20 40c15 0 15 18 30 18s15-18 30-18 15 18 30 18 15-18 30-18 15 18 30 18'/%3E%3Cpath d='M20 80c15 0 15 18 30 18s15-18 30-18 15 18 30 18 15-18 30-18 15 18 30 18'/%3E%3Cpath d='M20 120c15 0 15 18 30 18s15-18 30-18 15 18 30 18 15-18 30-18 15 18 30 18'/%3E%3Cpath d='M20 160c15 0 15 18 30 18s15-18 30-18 15 18 30 18 15-18 30-18 15 18 30 18'/%3E%3Cpath d='M55 20v180M110 20v180M165 20v180'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 200px 200px;
+    linear-gradient(rgba(245, 230, 211, 0.86), rgba(245, 230, 211, 0.86)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cg fill='none' stroke='%23000000' stroke-opacity='0.12' stroke-width='1.1'%3E%3Cpath d='M0 52 H320' stroke='none'/%3E%3Cpath d='M0 52 C20 52 20 12 40 12 C60 12 60 52 80 52 C100 52 100 12 120 12 C140 12 140 52 160 52 C180 52 180 12 200 12 C220 12 220 52 240 52 C260 52 260 12 280 12 C300 12 300 52 320 52'/%3E%3Cpath d='M0 104 C20 104 20 64 40 64 C60 64 60 104 80 104 C100 104 100 64 120 64 C140 64 140 104 160 104 C180 104 180 64 200 64 C220 64 220 104 240 104 C260 104 260 64 280 64 C300 64 300 104 320 104'/%3E%3Cpath d='M0 156 C20 156 20 116 40 116 C60 116 60 156 80 156 C100 156 100 116 120 116 C140 116 140 156 160 156 C180 156 180 116 200 116 C220 156 220 116 240 116 C260 116 260 156 280 156 C300 156 300 116 320 116'/%3E%3Cpath d='M0 208 C20 208 20 168 40 168 C60 168 60 208 80 208 C100 208 100 168 120 168 C140 168 140 208 160 208 C180 208 180 168 200 168 C220 168 220 208 240 208 C260 208 260 168 280 168 C300 168 300 208 320 208'/%3E%3Cpath d='M0 260 C20 260 20 220 40 220 C60 220 60 260 80 260 C100 260 100 220 120 220 C140 220 140 260 160 260 C180 260 180 220 200 220 C220 220 220 260 240 260 C260 260 260 220 280 220 C300 220 300 260 320 260'/%3E%3Cpath d='M40 0 V320'/%3E%3Cpath d='M120 0 V320'/%3E%3Cpath d='M200 0 V320'/%3E%3Cpath d='M280 0 V320'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 320px 320px;
   background-repeat: repeat;
 }
 
@@ -169,12 +169,12 @@ header {
 
 .top-bar input {
   width: 100%;
-  max-width: 350px;
-  padding: 12px 16px;
+  max-width: 100%;
+  padding: 10px 14px;
   border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 14px;
-  height: auto;
+  height: 42px;
   background: rgba(255,255,255,0.92);
   outline: none;
   box-shadow: 0 4px 10px rgba(0,0,0,0.03);
@@ -217,7 +217,9 @@ header {
   border: 1px solid #ccc;
   position: absolute;
   z-index: 10;
-  margin-top: 50px;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
   border-radius: 10px;
   overflow: hidden;
   min-width: 160px;
@@ -462,7 +464,7 @@ header {
 /* MOBILE */
 @media (max-width: 768px) {
   body::before {
-    background-size: 180px 180px;
+    background-size: 240px 240px;
   }
 
   header {
@@ -522,12 +524,12 @@ header {
   }
 
   .top-bar input {
-    max-width: 90%;
-    padding: 10px 14px;
-    font-size: 14px;
-    height: 46px;
     width: 100%;
+    max-width: 100%;
     min-width: 0;
+    height: 42px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
   }
 
   .filter-content {
@@ -624,8 +626,8 @@ header {
   }
 
   .top-bar input {
-    height: 42px;
-    padding: 9px 12px;
-    font-size: 15px;
+    height: 42px !important;
+    padding: 9px 12px !important;
+    font-size: 15px !important;
   }
 }
