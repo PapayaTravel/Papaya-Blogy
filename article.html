@@ -32,12 +32,42 @@
     import imageUrlBuilder from 'https://esm.sh/@sanity/image-url';
     import { toHTML } from 'https://esm.sh/@portabletext/to-html';
 
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      runTransaction,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
     const client = createClient({
       projectId: 'qmdaowg9',
       dataset: 'production',
       apiVersion: '2025-01-01',
       useCdn: true
     });
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMX4SM_yMHrnBbDdieZA4nnuIc3Njx1qU",
+      authDomain: "papaya-8f6fc.firebaseapp.com",
+      projectId: "papaya-8f6fc",
+      storageBucket: "papaya-8f6fc.firebasestorage.app",
+      messagingSenderId: "878790020885",
+      appId: "1:878790020885:web:0a9e5989f28ddf9a22231c",
+      measurementId: "G-61J6C647F7"
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
+
+    function getDeviceId() {
+      let id = localStorage.getItem("papaya_device_id");
+      if (!id) {
+        id = crypto.randomUUID();
+        localStorage.setItem("papaya_device_id", id);
+      }
+      return id;
+    }
 
     const builder = imageUrlBuilder(client);
     const urlFor = (source) => builder.image(source).auto('format').fit('max').width(1400).url();
@@ -86,10 +116,33 @@
           discordLink.href = post.discord;
           discordLink.style.display = 'inline-flex';
         }
+
+        const deviceId = getDeviceId();
+        const counterRef = doc(db, "postViews", post._id);
+        const viewerRef = doc(db, "postViews", post._id, "viewers", deviceId);
+
+        await runTransaction(db, async (transaction) => {
+          const viewerSnap = await transaction.get(viewerRef);
+
+          if (!viewerSnap.exists()) {
+            const counterSnap = await transaction.get(counterRef);
+            const currentCount = counterSnap.exists() ? (counterSnap.data().count || 0) : 0;
+
+            transaction.set(viewerRef, {
+              createdAt: serverTimestamp()
+            });
+
+            transaction.set(counterRef, {
+              count: currentCount + 1,
+              title: post.title,
+              slug: slug,
+              updatedAt: serverTimestamp()
+            }, { merge: true });
+          }
+        });
       }
     }
   </script>
 
 </body>
 </html>
-
