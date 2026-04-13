@@ -40,6 +40,12 @@
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@sanity/client@6';
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
     const client = createClient({
       projectId: 'qmdaowg9',
@@ -47,6 +53,19 @@
       apiVersion: '2025-01-01',
       useCdn: true
     });
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDMX4SM_yMHrnBbDdieZA4nnuIc3Njx1qU",
+      authDomain: "papaya-8f6fc.firebaseapp.com",
+      projectId: "papaya-8f6fc",
+      storageBucket: "papaya-8f6fc.firebasestorage.app",
+      messagingSenderId: "878790020885",
+      appId: "1:878790020885:web:0a9e5989f28ddf9a22231c",
+      measurementId: "G-61J6C647F7"
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const db = getFirestore(firebaseApp);
 
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat') || 'top';
@@ -188,10 +207,11 @@
       }
     `, { categoryTitle });
 
-    allPosts = allPosts.map(post => {
-      const views = parseInt(localStorage.getItem('views_' + post._id) || '0', 10);
+    allPosts = await Promise.all(allPosts.map(async post => {
+      const snap = await getDoc(doc(db, "postViews", post._id));
+      const views = snap.exists() ? (snap.data().count || 0) : 0;
       return { ...post, views };
-    });
+    }));
 
     buildTags(allPosts);
     renderPosts();
