@@ -23,6 +23,14 @@
 </div>
 
 <script type="module">
+  const ADMIN_PASSWORD = "sem_daj_svoje_heslo";
+
+const entered = prompt("Zadaj admin heslo");
+
+if (entered !== ADMIN_PASSWORD) {
+  document.body.innerHTML = "<h1 style='font-family:Poppins,sans-serif;text-align:center;margin-top:80px;'>Prístup zamietnutý</h1>";
+  throw new Error("Unauthorized");
+}
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
   import {
     getFirestore,
