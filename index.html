@@ -35,43 +35,43 @@
     }
 
     .welcome-content {
-      max-height: 505px;
       overflow: hidden;
       transition: max-height 0.6s ease;
       position: relative;
+      max-height: none;
     }
 
     .welcome-content.expanded {
-      max-height: 3400px;
+      max-height: 5000px !important;
     }
 
     .welcome-fade {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 10px;
-      height: 185px;
+      top: 0;
+      bottom: -18px;
       background: linear-gradient(
         to bottom,
         rgba(245, 230, 211, 0) 0%,
-        rgba(245, 230, 211, 0.03) 10%,
-        rgba(245, 230, 211, 0.08) 20%,
-        rgba(245, 230, 211, 0.16) 30%,
-        rgba(245, 230, 211, 0.28) 42%,
-        rgba(245, 230, 211, 0.46) 56%,
-        rgba(245, 230, 211, 0.68) 72%,
-        rgba(245, 230, 211, 0.88) 86%,
-        rgba(245, 230, 211, 0.97) 94%,
+        rgba(245, 230, 211, 0.02) 8%,
+        rgba(245, 230, 211, 0.06) 16%,
+        rgba(245, 230, 211, 0.12) 28%,
+        rgba(245, 230, 211, 0.22) 42%,
+        rgba(245, 230, 211, 0.38) 58%,
+        rgba(245, 230, 211, 0.58) 74%,
+        rgba(245, 230, 211, 0.80) 88%,
+        rgba(245, 230, 211, 0.96) 96%,
         rgba(245, 230, 211, 1) 100%
       );
-      backdrop-filter: blur(1.4px);
-      -webkit-backdrop-filter: blur(1.4px);
+      backdrop-filter: blur(1.6px);
+      -webkit-backdrop-filter: blur(1.6px);
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease, top 0.3s ease;
       z-index: 1;
     }
 
-    .welcome-content.expanded + .welcome-fade {
+    .welcome-fade.hidden {
       opacity: 0;
     }
 
@@ -137,7 +137,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: -4px;
+      margin-top: 2px;
       margin-bottom: 14px;
       position: relative;
       z-index: 3;
@@ -188,9 +188,9 @@
     }
 
     .footer-help {
-      max-width: 900px;
-      margin: 90px auto 40px auto;
-      padding: 0 20px;
+      max-width: 1280px;
+      margin: 96px auto 40px auto;
+      padding: 0 24px;
       text-align: center;
       color: #222;
       line-height: 1.9;
@@ -201,10 +201,6 @@
     }
 
     @media (max-width: 768px) {
-      .welcome-content {
-        max-height: 545px;
-      }
-
       .welcome-text {
         font-size: 0.98rem;
         line-height: 1.8;
@@ -214,21 +210,19 @@
         padding-left: 20px;
       }
 
-      .welcome-fade {
-        bottom: 10px;
-        height: 180px;
-      }
-
       .welcome-toggle {
         font-size: 50px;
       }
 
       .welcome-toggle-wrap {
         min-height: 50px;
+        margin-top: 2px;
+        margin-bottom: 14px;
       }
 
       .footer-help {
         margin-top: 76px;
+        padding: 0 16px;
       }
     }
   </style>
@@ -267,8 +261,8 @@
 
             <h2 class="welcome-reasons-title">Pýtate sa, prečo naše články nie sú priamo na Discorde?</h2>
 
-            <ul class="welcome-list">
-              <li>
+            <ul class="welcome-list" id="welcomeList">
+              <li id="firstReason">
                 Discord nebol primárne vytvorený na písanie blogov a článkov, a preto má limity, ako je napríklad obmedzený počet znakov na správu.
               </li>
               <li>
@@ -421,11 +415,45 @@
   <script>
     const welcomeToggle = document.getElementById('welcomeToggle');
     const welcomeContent = document.getElementById('welcomeContent');
+    const welcomeFade = document.getElementById('welcomeFade');
+    const firstReason = document.getElementById('firstReason');
+
+    function setCollapsedState() {
+      if (!firstReason) return;
+
+      const collapsedHeight = firstReason.offsetTop + firstReason.offsetHeight;
+      welcomeContent.style.maxHeight = `${collapsedHeight}px`;
+
+      const fadeStart = Math.max(firstReason.offsetTop - 8, 0);
+      welcomeFade.style.top = `${fadeStart}px`;
+      welcomeFade.classList.remove('hidden');
+    }
+
+    function setExpandedState() {
+      welcomeContent.style.maxHeight = `${welcomeContent.scrollHeight}px`;
+      welcomeFade.classList.add('hidden');
+    }
+
+    let expanded = false;
+
+    function applyState() {
+      if (expanded) {
+        setExpandedState();
+        welcomeToggle.textContent = '⌃';
+        welcomeToggle.setAttribute('aria-label', 'Zbaliť text');
+      } else {
+        setCollapsedState();
+        welcomeToggle.textContent = '⌄';
+        welcomeToggle.setAttribute('aria-label', 'Rozbaliť text');
+      }
+    }
+
+    window.addEventListener('load', applyState);
+    window.addEventListener('resize', applyState);
 
     welcomeToggle.addEventListener('click', () => {
-      const expanded = welcomeContent.classList.toggle('expanded');
-      welcomeToggle.textContent = expanded ? '⌃' : '⌄';
-      welcomeToggle.setAttribute('aria-label', expanded ? 'Zbaliť text' : 'Rozbaliť text');
+      expanded = !expanded;
+      applyState();
     });
   </script>
 
