@@ -3,10 +3,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Papaya Blogy</title>
+  <title>Web Papaya</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@700;800&family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .intro {
+      text-align: center;
+    }
+
+    .welcome-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.05;
+      margin: 12px 0 14px 0;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .welcome-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .welcome-box {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto 8px auto;
+    }
+
+    .welcome-content {
+      max-height: 470px;
+      overflow: hidden;
+      transition: max-height 0.55s ease;
+      position: relative;
+    }
+
+    .welcome-content.expanded {
+      max-height: 3200px;
+    }
+
+    .welcome-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 120px;
+      background: linear-gradient(
+        to bottom,
+        rgba(245, 230, 211, 0),
+        rgba(245, 230, 211, 0.45),
+        rgba(245, 230, 211, 0.82),
+        rgba(245, 230, 211, 1)
+      );
+      backdrop-filter: blur(1.2px);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .welcome-content.expanded + .welcome-fade {
+      opacity: 0;
+    }
+
+    .welcome-text {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.03rem;
+      line-height: 1.9;
+      color: #222;
+    }
+
+    .welcome-text p {
+      margin: 0 0 18px 0;
+      text-align: center;
+    }
+
+    .welcome-reasons-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      font-weight: 700;
+      text-align: center;
+      margin: 26px 0 14px 0;
+    }
+
+    .welcome-list {
+      max-width: 820px;
+      margin: 0 auto 20px auto;
+      padding-left: 26px;
+      text-align: left;
+      line-height: 1.85;
+    }
+
+    .welcome-list li {
+      margin-bottom: 14px;
+    }
+
+    .travel-word {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      text-align: center;
+      margin: 26px 0 8px 0;
+    }
+
+    .team-sign {
+      text-align: right;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .welcome-divider {
+      width: 100%;
+      height: 1px;
+      background: #bfbfbf;
+      margin: 8px 0 8px 0;
+    }
+
+    .welcome-toggle-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .welcome-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 42px;
+      line-height: 1;
+      color: #222;
+      padding: 2px 10px 8px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .welcome-toggle:hover {
+      transform: scale(1.08);
+      opacity: 0.75;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-content {
+        max-height: 500px;
+      }
+
+      .welcome-text {
+        font-size: 0.98rem;
+        line-height: 1.8;
+      }
+
+      .welcome-list {
+        padding-left: 20px;
+      }
+
+      .welcome-toggle {
+        font-size: 36px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -24,16 +182,69 @@
   </div>
 
   <section class="intro">
-    <h1>Papaya Blogy</h1>
+    <div class="welcome-shell">
+      <h1 class="welcome-title">Web Papaya</h1>
 
-    <p class="center-text intro-text">
-      Blogy a príspevky z nášho Discord servera.
-    </p>
+      <div class="welcome-box">
+        <div class="welcome-content" id="welcomeContent">
+          <div class="welcome-text">
+            <p>🌴 <strong>Vitajte na našom webe!</strong></p>
 
-    <a href="https://discord.gg/pJyMf2Jxba" class="discord-btn" target="_blank" rel="noopener">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
-      Discord Papaya
-    </a>
+            <p>
+              Tento web slúži ako archív všetkých našich článkov z Discordu. Články sú rozdelené do kategórií, aby ste ľahšie našli presne to, čo hľadáte. Ku každej kategórii sú priradené tagy, vďaka ktorým si ešte jednoduchšie vyfiltrujete tému, ktorá Vás zaujíma, alebo autora, ktorého blogy a články radi čítate.
+            </p>
+
+            <p>
+              Web sme sa snažili navrhnúť tak, aby Vám čítanie čo najviac spríjemnil — bez reklám a iných rušivých prvkov. V každom fóre Papaya News nájdete pripnutú správu s odkazom na tento web. ✨
+            </p>
+
+            <h2 class="welcome-reasons-title">Pýtate sa, prečo naše články nie sú priamo na Discorde?</h2>
+
+            <ul class="welcome-list">
+              <li>
+                Discord nebol primárne vytvorený na písanie blogov a článkov, a preto má limity, ako je napríklad obmedzený počet znakov na správu.
+              </li>
+              <li>
+                Z dizajnového hľadiska Discord neponúka veľa možností, a tak by každý článok pôsobil nudne a jednoliato.
+              </li>
+              <li>
+                Obmedzené sú aj filtre a tagy, čo by pri väčšom počte dlhších článkov znižovalo prehľadnosť a staršie články by sa mohli hľadať oveľa ťažšie.
+              </li>
+              <li>
+                Ak by ste chceli potešiť ľudí vlastným článkom, narazili by ste na rôzne obmedzenia a spoplatnené funkcie, kvôli ktorým by Váš blog nemusel vyzerať presne tak, ako ste si predstavovali. Keďže našou snahou je ponúknuť Vám možnosť tvoriť zadarmo a bez obmedzení, web je na to oveľa lepším miestom. 😊
+              </li>
+              <li>
+                Každý článok, ktorý zverejníme na webe, vieme prepojiť so serverom. To znamená, že vždy, keď pribudne nový článok, objaví sa aj vo fóre na našom Discorde — v rovnakej kategórii ako na webe — kde si môžete prečítať krátku ukážku. Ak Vás článok zaujme, stačí kliknúť na tlačidlo pod ukážkou a dostanete sa priamo na celý článok. A ak budete chcieť niečo zaujímavé podotknúť alebo sa na niečo opýtať, priestor pod ukážkou článku na serveri je na to tým správnym miestom.
+              </li>
+            </ul>
+
+            <p>
+              Z týchto dôvodov sme sa rozhodli pre toto riešenie. Zároveň však komunikujeme s podporou o možnostiach zlepšenia Discordu a veríme, že sa nám podarí prispôsobiť server našim predstavám tak, aby sme v budúcnosti mohli fungovať zväčša už len na tejto platforme.
+            </p>
+
+            <p>
+              Veríme, že Vám naše články prinesú množstvo zaujímavostí, informácií, odpovedí na otázky a možno Vám aj spríjemnia večer. 🌍
+            </p>
+
+            <div class="travel-word">Cestujte!</div>
+            <div class="team-sign">Tím Papaya</div>
+          </div>
+        </div>
+
+        <div class="welcome-fade"></div>
+
+        <div class="welcome-divider"></div>
+
+        <div class="welcome-toggle-wrap">
+          <button class="welcome-toggle" id="welcomeToggle" aria-label="Rozbaliť text">⌄</button>
+        </div>
+      </div>
+
+      <a href="https://discord.gg/pJyMf2Jxba" class="discord-btn" target="_blank" rel="noopener">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+        Discord Papaya
+      </a>
+    </div>
   </section>
 
   <h2 class="fancy">Oficiálne blogy servera Papaya</h2>
@@ -125,6 +336,15 @@
       });
 
       track.appendChild(card);
+    });
+
+    const welcomeToggle = document.getElementById('welcomeToggle');
+    const welcomeContent = document.getElementById('welcomeContent');
+
+    welcomeToggle.addEventListener('click', () => {
+      const expanded = welcomeContent.classList.toggle('expanded');
+      welcomeToggle.textContent = expanded ? '⌃' : '⌄';
+      welcomeToggle.setAttribute('aria-label', expanded ? 'Zbaliť text' : 'Rozbaliť text');
     });
   </script>
 
