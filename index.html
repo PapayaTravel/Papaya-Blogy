@@ -142,6 +142,7 @@
       position: relative;
       z-index: 3;
       min-height: 58px;
+      height: 58px;
     }
 
     .welcome-toggle {
@@ -216,6 +217,7 @@
 
       .welcome-toggle-wrap {
         min-height: 50px;
+        height: 50px;
         margin-top: 2px;
         margin-bottom: 14px;
       }
@@ -324,7 +326,7 @@
     <a href="category.html?cat=dennik" class="cat-btn">Denníky</a>
 
     <div class="community-note">
-      <p><strong>Denníky sú miestom pre blogy a články od Vás, od ľudí ✍️</strong></p>
+      <p><strong>Denníky sú miestom pre blogy a články od Vás, ľudí ✍️</strong></p>
       <p>
         Máte chuť napísať svoj vlastný článok alebo blog a podeliť sa oň s ostatnými? Chcete ľuďom priblížiť svoj zážitok, názor alebo jednoducho napísať niečo zaujímavé? Aj Vy môžete na našom serveri tvoriť úplne zadarmo 😊
       </p>
@@ -424,7 +426,7 @@
       const collapsedHeight = firstReason.offsetTop + firstReason.offsetHeight;
       welcomeContent.style.maxHeight = `${collapsedHeight}px`;
 
-      const fadeStart = Math.max(firstReason.offsetTop - 8, 0);
+      const fadeStart = Math.max(firstReason.offsetTop, 0);
       welcomeFade.style.top = `${fadeStart}px`;
       welcomeFade.classList.remove('hidden');
     }
