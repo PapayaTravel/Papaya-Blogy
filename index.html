@@ -149,17 +149,35 @@
       background: transparent;
       border: none;
       cursor: pointer;
+      width: 70px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      color: #1f1f1f;
+    }
+
+    .welcome-toggle::before {
+      content: "⌄";
+      display: block;
       font-size: 58px;
       line-height: 1;
-      color: #1f1f1f;
-      padding: 0;
-      opacity: 1;
+      transform: rotate(0deg);
       transition: transform 0.25s ease, color 0.25s ease;
     }
 
-    .welcome-toggle:hover {
+    .welcome-toggle.expanded::before {
+      transform: rotate(180deg);
+    }
+
+    .welcome-toggle:hover::before {
       transform: scale(1.08);
       color: #555;
+    }
+
+    .welcome-toggle.expanded:hover::before {
+      transform: rotate(180deg) scale(1.08);
     }
 
     .highlight-chip {
@@ -212,6 +230,11 @@
       }
 
       .welcome-toggle {
+        width: 62px;
+        height: 50px;
+      }
+
+      .welcome-toggle::before {
         font-size: 50px;
       }
 
@@ -299,7 +322,7 @@
         <div class="welcome-divider"></div>
 
         <div class="welcome-toggle-wrap">
-          <button class="welcome-toggle" id="welcomeToggle" type="button" aria-label="Rozbaliť text">⌄</button>
+          <button class="welcome-toggle" id="welcomeToggle" type="button" aria-label="Rozbaliť text"></button>
         </div>
       </div>
 
@@ -429,11 +452,15 @@
       const fadeStart = Math.max(firstReason.offsetTop, 0);
       welcomeFade.style.top = `${fadeStart}px`;
       welcomeFade.classList.remove('hidden');
+      welcomeToggle.classList.remove('expanded');
+      welcomeToggle.setAttribute('aria-label', 'Rozbaliť text');
     }
 
     function setExpandedState() {
       welcomeContent.style.maxHeight = `${welcomeContent.scrollHeight}px`;
       welcomeFade.classList.add('hidden');
+      welcomeToggle.classList.add('expanded');
+      welcomeToggle.setAttribute('aria-label', 'Zbaliť text');
     }
 
     let expanded = false;
@@ -441,12 +468,8 @@
     function applyState() {
       if (expanded) {
         setExpandedState();
-        welcomeToggle.textContent = '⌃';
-        welcomeToggle.setAttribute('aria-label', 'Zbaliť text');
       } else {
         setCollapsedState();
-        welcomeToggle.textContent = '⌄';
-        welcomeToggle.setAttribute('aria-label', 'Rozbaliť text');
       }
     }
 
