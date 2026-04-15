@@ -35,7 +35,7 @@
     }
 
     .welcome-content {
-      max-height: 575px;
+      max-height: 505px;
       overflow: hidden;
       transition: max-height 0.6s ease;
       position: relative;
@@ -50,7 +50,7 @@
       left: 0;
       right: 0;
       bottom: 10px;
-      height: 170px;
+      height: 185px;
       background: linear-gradient(
         to bottom,
         rgba(245, 230, 211, 0) 0%,
@@ -141,6 +141,7 @@
       margin-bottom: 14px;
       position: relative;
       z-index: 3;
+      min-height: 58px;
     }
 
     .welcome-toggle {
@@ -161,16 +162,16 @@
     }
 
     .highlight-chip {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid #d7d7d7;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      display: inline;
+      padding: 1px 5px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid #dddddd;
+      box-shadow: none;
       font-weight: 700;
       color: #111;
       white-space: nowrap;
-      font-size: 0.95em;
+      font-size: 0.92em;
     }
 
     .community-note {
@@ -188,7 +189,7 @@
 
     .footer-help {
       max-width: 900px;
-      margin: 56px auto 40px auto;
+      margin: 90px auto 40px auto;
       padding: 0 20px;
       text-align: center;
       color: #222;
@@ -201,7 +202,7 @@
 
     @media (max-width: 768px) {
       .welcome-content {
-        max-height: 615px;
+        max-height: 545px;
       }
 
       .welcome-text {
@@ -215,11 +216,19 @@
 
       .welcome-fade {
         bottom: 10px;
-        height: 165px;
+        height: 180px;
       }
 
       .welcome-toggle {
         font-size: 50px;
+      }
+
+      .welcome-toggle-wrap {
+        min-height: 50px;
+      }
+
+      .footer-help {
+        margin-top: 76px;
       }
     }
   </style>
