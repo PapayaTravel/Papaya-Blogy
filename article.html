@@ -20,9 +20,21 @@
   <div class="article-page-shell">
     <div class="article-wrapper">
       <div class="article">
+
         <h1 id="title"></h1>
+
+        <!-- 🔵 BUBLINA S OBSAHOM -->
+        <div id="summaryBox" class="article-summary" style="display:none;">
+          <div id="summaryTitle" class="article-summary-title"></div>
+          <ul id="summaryList"></ul>
+        </div>
+
         <div id="articleContent"></div>
-        <a href="#" id="discordLink" class="discord-link" target="_blank" rel="noopener" style="display:none;">Diskusia na Discorde</a>
+
+        <a href="#" id="discordLink" class="discord-link" target="_blank" rel="noopener" style="display:none;">
+          Diskusia na Discorde
+        </a>
+
       </div>
     </div>
   </div>
@@ -70,7 +82,8 @@
     }
 
     const builder = imageUrlBuilder(client);
-    const urlFor = (source) => builder.image(source).auto('format').fit('max').width(1400).url();
+    const urlFor = (source) =>
+      builder.image(source).auto('format').fit('max').width(1400).url();
 
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('slug');
@@ -83,40 +96,68 @@
           _id,
           title,
           body,
-          discord
+          discord,
+          obsah
         }
       `, { slug });
 
       if (!post) {
         document.getElementById('title').innerText = 'Článok sa nenašiel';
       } else {
+
         document.getElementById('title').innerText = post.title;
 
+        // 🔵 OBSAH BUBLINY
+        const summaryBox = document.getElementById('summaryBox');
+        const summaryTitle = document.getElementById('summaryTitle');
+        const summaryList = document.getElementById('summaryList');
+
+        if (post.obsah) {
+          const lines = post.obsah
+            .split('\n')
+            .map(l => l.trim())
+            .filter(l => l !== '');
+
+          if (lines.length > 0) {
+            summaryTitle.textContent = lines[0];
+
+            const bulletLines = lines.slice(1);
+            summaryList.innerHTML = bulletLines
+              .map(line => `<li>${line}</li>`)
+              .join('');
+
+            summaryBox.style.display = 'block';
+          }
+        }
+
+        // 📄 OBSAH ČLÁNKU
         const html = toHTML(post.body || [], {
           components: {
             types: {
-              image: ({value}) => {
+              image: ({ value }) => {
                 return `<img src="${urlFor(value)}" alt="" class="article-inline-image">`;
               }
             },
             block: {
-              normal: ({children}) => `<p>${children}</p>`,
-              h1: ({children}) => `<h1>${children}</h1>`,
-              h2: ({children}) => `<h2>${children}</h2>`,
-              h3: ({children}) => `<h3>${children}</h3>`,
-              blockquote: ({children}) => `<blockquote>${children}</blockquote>`
+              normal: ({ children }) => `<p>${children}</p>`,
+              h1: ({ children }) => `<h1>${children}</h1>`,
+              h2: ({ children }) => `<h2>${children}</h2>`,
+              h3: ({ children }) => `<h3>${children}</h3>`,
+              blockquote: ({ children }) => `<blockquote>${children}</blockquote>`
             }
           }
         });
 
         document.getElementById('articleContent').innerHTML = html;
 
+        // 🔗 DISCORD LINK
         const discordLink = document.getElementById('discordLink');
         if (post.discord) {
           discordLink.href = post.discord;
           discordLink.style.display = 'inline-flex';
         }
 
+        // 👁️ VIEW COUNT
         const deviceId = getDeviceId();
         const counterRef = doc(db, "postViews", post._id);
         const viewerRef = doc(db, "postViews", post._id, "viewers", deviceId);
@@ -126,7 +167,9 @@
 
           if (!viewerSnap.exists()) {
             const counterSnap = await transaction.get(counterRef);
-            const currentCount = counterSnap.exists() ? (counterSnap.data().count || 0) : 0;
+            const currentCount = counterSnap.exists()
+              ? (counterSnap.data().count || 0)
+              : 0;
 
             transaction.set(viewerRef, {
               createdAt: serverTimestamp()
