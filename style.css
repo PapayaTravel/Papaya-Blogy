@@ -658,3 +658,28 @@ header {
     font-size: 14px !important;
   }
 }
+
+.article-summary {
+  width: 100%;
+  background: linear-gradient(135deg, #dff3ff, #ecf9ff);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 26px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.05);
+  color: #1b3a4b;
+}
+
+.article-summary-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.article-summary ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.article-summary li {
+  margin-bottom: 6px;
+}
